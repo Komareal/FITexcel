@@ -32,7 +32,7 @@
 #include <charconv>
 #include <span>
 #include <utility>
-#include "expression.h"
+#include "classes/expression.h"
 using namespace std::literals;
 using CValue = std::variant<std::monostate, double, std::string>;
 
@@ -44,9 +44,9 @@ constexpr unsigned SPREADSHEET_PARSER = 0x10;
 
 // #define BASIC_TEST
 #endif /* __PROGTEST__ */
-#include "CPos.cpp"
-#include "CSpreadsheet.cpp"
-#include "CExprBuilder.cpp"
+#include "classes/CPos.cpp"
+#include "classes/CSpreadsheet.cpp"
+#include "classes/CExprBuilder.cpp"
 #include "test.cpp"
 
 #ifndef __PROGTEST__
