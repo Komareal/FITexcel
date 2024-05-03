@@ -15,6 +15,7 @@ bool valueMatch(const CValue &r,
 }
 
 void posTest() {
+    // Basic operators
     CPos x("A0");
     CPos y("A0");
     assert(x == y);
@@ -32,8 +33,12 @@ void posTest() {
     y = {"PROG128"};
     assert(x < y);
 
+    y = {"AA27"};
+
     y = x;
     assert(x == y);
+
+    // Exceptions
     bool exc = false;
     try {
         y = {"0A"};
@@ -49,6 +54,13 @@ void posTest() {
         exc = true;
     }
     assert(exc);
+    exc = false;
+    try {
+        y = {"AZaz90"};
+    } catch (...) {
+        exc = true;
+    }
+    assert(!exc);
 
     exc = false;
     try {
@@ -59,7 +71,7 @@ void posTest() {
     assert(exc);
     exc = false;
     try {
-        y = {"HLHXCZMXSYUMQZ0"};
+        y = {"GKGWBYLWRXTLPP0"};
     } catch (const std::overflow_error &) {
         exc = true;
     }
@@ -73,7 +85,7 @@ void posTest() {
     assert(exc);
     exc = false;
     try {
-        y = {"HLHXCZMXSYUMQP0"};
+        y = {"GKGWBYLWRXTLPO0"};
     } catch (const std::overflow_error &) {
         exc = true;
     }
@@ -85,6 +97,28 @@ void posTest() {
         exc = true;
     }
     assert(!exc);
+
+    // Moving
+    y = {"B10"};
+    y.relativeMove(25, 33);
+    assert(y == CPos("AA43"));
+
+    y = {"$B10"};
+    y.relativeMove(25, 33);
+    assert(y == CPos("B43"));
+
+    y = {"B$10"};
+    y.relativeMove(25, 33);
+    assert(y == CPos("AA10"));
+
+    y = {"$B$10"};
+    y.relativeMove(25, 33);
+    assert(y == CPos("B10"));
+
+    y = {"B10"};
+    y.relativeMove(-1, -10);
+    assert(y == CPos("A0"));
+
     std::cout << "posTest OK" << std::endl;
 }
 
