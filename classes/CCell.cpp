@@ -10,7 +10,7 @@ CCell::CCell(std::string_view str): m_computedAt(0) {
 CCell::CCell(const CCell &other)
     : m_computedValue(other.m_computedValue),
       m_computedAt(other.m_computedAt),
-      m_root(other.m_root),
+      m_root(std::make_unique<CASTNode>(*other.m_root)),
       m_references(other.m_references) {
 }
 

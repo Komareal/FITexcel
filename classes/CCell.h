@@ -25,7 +25,7 @@ public:
 private:
     CValue m_computedValue;
     size_t m_computedAt;
-    CASTNode m_root;
+    std::unique_ptr<CASTNode> m_root;
     CPosRefArr m_references;
 };
 
