@@ -1,3 +1,4 @@
+#include "test.h"
 bool valueMatch(const CValue &r,
                 const CValue &s) {
     if (r.index() != s.index())

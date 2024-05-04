@@ -1,6 +1,13 @@
 #ifndef CSPREADSHEET_H
 #define CSPREADSHEET_H
+#include "../header.h"
 
+#include "CCell.h"
+constexpr unsigned SPREADSHEET_CYCLIC_DEPS = 0x01;
+constexpr unsigned SPREADSHEET_FUNCTIONS = 0x02;
+constexpr unsigned SPREADSHEET_FILE_IO = 0x04;
+constexpr unsigned SPREADSHEET_SPEED = 0x08;
+constexpr unsigned SPREADSHEET_PARSER = 0x10;
 
 class CSpreadsheet {
 public:
@@ -25,7 +32,7 @@ public:
                   int h = 1);
 
 private:
-    // todo
+    std::map<CPos, CCell> m_sheet;
 };
 
 

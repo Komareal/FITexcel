@@ -1,8 +1,9 @@
-#include <utility>
-
 #ifndef CASTNODE_H
 #define CASTNODE_H
+#include "../header.h"
 
+
+using CValue = std::variant<std::monostate, double, std::string>;
 
 enum EOpType {
     ADD,

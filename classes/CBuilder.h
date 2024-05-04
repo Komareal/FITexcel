@@ -1,7 +1,11 @@
 #ifndef CBUILDER_H
 #define CBUILDER_H
-#include "CASTNode.h"
+#include "../header.h"
 
+#include "CCell.h"
+#ifndef __PROGTEST__
+#include "expression.h"
+#endif
 
 class CBuilder : public CExprBuilder {
 public:

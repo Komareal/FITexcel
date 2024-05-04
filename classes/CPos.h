@@ -1,5 +1,7 @@
 #ifndef CPOS_H
 #define CPOS_H
+#include "../header.h"
+
 
 
 /**
@@ -11,8 +13,9 @@
 class CPos {
 public:
     // ------------ Constructors
-    CPos(std::string_view str );
-    CPos(std::string_view str, bool ignore_colon , size_t & index );
+    CPos(std::string_view str);
+
+    CPos(std::string_view str, bool ignore_colon, size_t &index);
 
     CPos();
 

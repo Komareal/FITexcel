@@ -1,8 +1,12 @@
 #ifndef CCELL_H
 #define CCELL_H
-#include "CASTNode.h"
+#include "CPos.h"
+#include "../header.h"
 class CCell;
 using CPosRefArr = std::vector<std::pair<CPos, CCell *> >;
+
+
+#include "CASTNode.h"
 
 /**
  *
