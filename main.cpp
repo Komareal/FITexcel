@@ -46,12 +46,17 @@ constexpr unsigned SPREADSHEET_PARSER = 0x10;
 #endif /* __PROGTEST__ */
 #include "classes/CPos.cpp"
 #include "classes/CSpreadsheet.cpp"
-#include "classes/CExprBuilder.cpp"
+#include "classes/CCell.cpp"
+#include "classes/CASTNode.cpp"
+#include "classes/CBuilder.cpp"
+
 #include "test.cpp"
+
 
 #ifndef __PROGTEST__
 int main() {
     posTest();
+    cellTest();
 
 #ifdef BASIC_TEST
     basicTests();

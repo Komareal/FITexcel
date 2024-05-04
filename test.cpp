@@ -14,6 +14,13 @@ bool valueMatch(const CValue &r,
     return fabs(std::get<double>(r) - std::get<double>(s)) <= 1e8 * DBL_EPSILON * fabs(std::get<double>(r));
 }
 
+void cellTest() {
+    CCell c1("A");
+    CCell c2("=8*8");
+    CCell c3("=A1*A4");
+    std::cout << "cellTest OK" << std::endl;
+}
+
 void posTest() {
     // Basic operators
     CPos x("A0");
@@ -105,15 +112,15 @@ void posTest() {
 
     y = {"$B10"};
     y.relativeMove(25, 33);
-    assert(y == CPos("B43"));
+    assert(y == CPos("$B43"));
 
     y = {"B$10"};
     y.relativeMove(25, 33);
-    assert(y == CPos("AA10"));
+    assert(y == CPos("AA$10"));
 
     y = {"$B$10"};
     y.relativeMove(25, 33);
-    assert(y == CPos("B10"));
+    assert(y == CPos("$B$10"));
 
     y = {"B10"};
     y.relativeMove(-1, -10);

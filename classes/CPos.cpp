@@ -3,7 +3,12 @@
 CPos::CPos(const std::string_view str): m_x(0), m_y(0), m_fixX(false), m_fixY(false) {
     size_t index = 0;
     parseX(str, index);
-    parseY(str, index);
+    parseY(str, index, false);
+}
+
+CPos::CPos(const std::string_view str, const bool ignore_colon, size_t &index): m_x(0), m_y(0), m_fixX(false), m_fixY(false) {
+    parseX(str, index);
+    parseY(str, index, ignore_colon);
 }
 
 CPos::CPos(): m_x(0), m_y(0), m_fixX(false), m_fixY(false) {
@@ -20,14 +25,14 @@ void CPos::parseX(const std::string_view &str, size_t &index) {
         throw std::invalid_argument("CPos: Invalid cell address");
 }
 
-void CPos::parseY(const std::string_view &str, size_t &index) {
+void CPos::parseY(const std::string_view &str, size_t &index, bool ignore_col) {
     if (str[index] == '$') {
         m_fixY = true;
         index++;
     }
 
     m_y = parseBase(str, 10, '0', 0, index);
-    if (index != str.length())
+    if (index != str.length() && (!ignore_col || str[index] == ':'))
         throw std::invalid_argument("CPos: Invalid cell address");
 }
 
@@ -102,7 +107,7 @@ CPos &CPos::operator=(CPos other) {
 
 // ------------ Equality ops
 bool operator==(const CPos &lhs, const CPos &rhs) {
-    return std::tie(lhs.m_x, lhs.m_y) == std::tie(rhs.m_x, rhs.m_y);
+    return std::tie(lhs.m_x, lhs.m_y, lhs.m_fixX, lhs.m_fixY) == std::tie(rhs.m_x, rhs.m_y, rhs.m_fixX, rhs.m_fixY);
 }
 
 bool operator!=(const CPos &lhs, const CPos &rhs) {

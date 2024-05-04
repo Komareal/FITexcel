@@ -11,7 +11,8 @@
 class CPos {
 public:
     // ------------ Constructors
-    CPos(std::string_view str);
+    CPos(std::string_view str );
+    CPos(std::string_view str, bool ignore_colon , size_t & index );
 
     CPos();
 
@@ -89,8 +90,9 @@ private:
      * wrapper for parsing second (base 10) part of address with post checks, also checks for '$' before address
      * @param str string containing the address
      * @param index from where to start and where it ends
+     * @param ignore_col
      */
-    void parseY(const std::string_view &str, size_t &index);
+    void parseY(const std::string_view &str, size_t &index, bool ignore_col);
 };
 
 #endif //CPOS_H

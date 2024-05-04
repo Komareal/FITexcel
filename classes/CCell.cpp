@@ -1,6 +1,11 @@
 #include "CCell.h"
+
+#include "CBuilder.h"
 // ------------ Constructors
 CCell::CCell(std::string_view str): m_computedAt(0) {
+    CBuilder builder(str, m_references);
+    parseExpression(std::string(str), builder);
+    m_root = builder.getRoot();
 }
 
 
@@ -27,7 +32,4 @@ CCell &CCell::operator=(CCell other) {
     std::swap(other.m_root, m_root);
     std::swap(other.m_references, m_references);
     return *this;
-}
-
-CValue CCell::getVal(size_t run) {
 }

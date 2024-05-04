@@ -5,9 +5,13 @@
 
 class CBuilder : public CExprBuilder {
 public:
-    CBuilder(const std::string_view &m_str, CPosRefArr &m_references, std::unique_ptr<CASTNode> &m_root);
+    CBuilder(const std::string_view &m_str, CPosRefArr &m_references);
 
-    bool build();
+    std::unique_ptr<CASTNode> getRoot();
+
+    void makeOp(EOpType type, size_t childnum);
+
+    [[nodiscard]] size_t emplaceRef(const CPos &pos) const;
 
     void opAdd() override;
 
@@ -44,10 +48,9 @@ public:
     void funcCall(std::string fnName, int paramCount) override;
 
 private:
-    const std::string_view & m_str;
-    std::stack<CASTNodeVal> m_stack;
+    const std::string_view &m_str;
+    std::stack<CASTNode> m_stack;
     CPosRefArr &m_references;
-    std::unique_ptr<CASTNode> & m_root;
 };
 
 

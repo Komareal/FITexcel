@@ -3,12 +3,6 @@
 #ifndef CASTNODE_H
 #define CASTNODE_H
 
-enum ENodeType {
-    VALUE,
-    UNARY,
-    BINARY,
-    TERNARY
-};
 
 enum EOpType {
     ADD,
@@ -34,13 +28,13 @@ enum EFuncType {
     IF
 };
 
-//  ------------                    OP     REF          RANGE           VAL      STR VAL      FUNC
-using CASTNodeVal = std::variant<EOpType, CPos, std::pair<CPos, CPos>, double, std::string, EFuncType>;
+//  ------------                    OP      REF          RANGE                VAL      STR VAL      FUNC
+using CASTNodeVal = std::variant<EOpType, size_t, std::pair<size_t, size_t>, double, std::string, EFuncType>;
 
 class CASTNode {
 public:
     // ------------  Constructors
-    CASTNode(ENodeType type, CASTNodeVal val);
+    CASTNode(CASTNodeVal val);
 
     // ------------  Move & copy
     CASTNode(const CASTNode &other);
@@ -49,9 +43,9 @@ public:
 
     CASTNode &operator=(CASTNode other);
 
-    ENodeType m_type;
     CASTNodeVal m_val;
     std::unique_ptr<CASTNode> m_childern[3];
+    size_t m_childernSize;
 
 private:
 };
