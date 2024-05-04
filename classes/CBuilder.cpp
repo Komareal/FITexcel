@@ -1,8 +1,10 @@
 #include "CBuilder.h"
 
-CBuilder::CBuilder(const std::string_view &m_str, CPosRefArr &m_references)
-    : m_str(m_str),
-      m_references(m_references) {
+#include <memory>
+
+CBuilder::CBuilder(const std::string_view &str, CPosRefArr &references)
+    : m_str(str),
+      m_references(references) {
 }
 
 std::unique_ptr<CASTNode> CBuilder::getRoot() {
@@ -79,11 +81,11 @@ void CBuilder::opGe() {
 }
 
 void CBuilder::valNumber(double val) {
-    m_stack.emplace(val);
+    m_stack.emplace(std::make_shared<CValue>(val));
 }
 
 void CBuilder::valString(std::string val) {
-    m_stack.emplace(val);
+    m_stack.emplace(std::make_shared<CValue>(val));
 }
 
 void CBuilder::valReference(const std::string val) {

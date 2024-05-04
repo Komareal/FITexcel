@@ -3,7 +3,11 @@
 #include "../header.h"
 
 
+class CCell;
+class CPos;
 using CValue = std::variant<std::monostate, double, std::string>;
+
+using CSharedVal = std::shared_ptr<CValue>;
 
 enum EOpType {
     ADD,
@@ -29,8 +33,8 @@ enum EFuncType {
     IF
 };
 
-//  ------------                    OP      REF          RANGE                VAL      STR VAL      FUNC
-using CASTNodeVal = std::variant<EOpType, size_t, std::pair<size_t, size_t>, double, std::string, EFuncType>;
+//  ------------                        VAL                 OP       FUNC       REF          RANGE
+using CASTNodeVal = std::variant<CSharedVal, EOpType, EFuncType, size_t, std::pair<size_t, size_t> >;
 
 class CASTNode {
 public:
@@ -47,8 +51,6 @@ public:
     CASTNodeVal m_val;
     std::unique_ptr<CASTNode> m_childern[3];
     size_t m_childernSize;
-
-private:
 };
 
 

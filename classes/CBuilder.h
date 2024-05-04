@@ -9,7 +9,7 @@
 
 class CBuilder : public CExprBuilder {
 public:
-    CBuilder(const std::string_view &m_str, CPosRefArr &m_references);
+    CBuilder(const std::string_view &str, CPosRefArr &references);
 
     std::unique_ptr<CASTNode> getRoot();
 

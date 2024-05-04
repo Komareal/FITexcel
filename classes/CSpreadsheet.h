@@ -12,7 +12,7 @@ constexpr unsigned SPREADSHEET_PARSER = 0x10;
 class CSpreadsheet {
 public:
     static unsigned capabilities() {
-        return SPREADSHEET_CYCLIC_DEPS | SPREADSHEET_FUNCTIONS | SPREADSHEET_FILE_IO | SPREADSHEET_SPEED | SPREADSHEET_PARSER;
+        return 0;
     }
 
     CSpreadsheet();
@@ -24,7 +24,7 @@ public:
     bool setCell(CPos pos,
                  std::string contents);
 
-    CValue getValue(CPos pos);
+    CValue getValue(const CPos &pos);
 
     void copyRect(CPos dst,
                   CPos src,
@@ -33,6 +33,8 @@ public:
 
 private:
     std::map<CPos, CCell> m_sheet;
+    size_t m_setRun;
+    size_t m_getRun;
 };
 
 

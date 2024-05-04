@@ -1,18 +1,24 @@
 #ifndef CCELL_H
 #define CCELL_H
-#include "CPos.h"
 #include "../header.h"
+#include "CPos.h"
+#include "CASTNode.h"
+
 class CCell;
 using CPosRefArr = std::vector<std::pair<CPos, CCell *> >;
-
-
-#include "CASTNode.h"
 
 /**
  *
  */
 class CCell {
 public:
+    friend class CSpreadsheet;
+    enum class ECellState {
+        FRESH,
+        OPEN,
+        CLOSED,
+    };
+
     // ------------ Constructors
     CCell(std::string_view str);
 
@@ -23,14 +29,18 @@ public:
 
     CCell &operator=(CCell other);
 
-    // ------------ Public interface
-    CValue getVal(size_t run);
+    CSharedVal getValue(size_t setRun, size_t getRun, std::map<CPos, CCell> &map);
 
 private:
-    CValue m_computedValue;
-    size_t m_computedAt;
+   CSharedVal m_computedValue;
+    size_t m_valueValidAt;
+    size_t m_stateGivenAt;
+    ECellState m_state;
     std::unique_ptr<CASTNode> m_root;
     CPosRefArr m_references;
+
+    void saveVal(const CSharedVal &val, size_t setRun);
+
 };
 
 

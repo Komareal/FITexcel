@@ -1,4 +1,6 @@
 #include "test.h"
+using namespace std;
+
 bool valueMatch(const CValue &r,
                 const CValue &s) {
     if (r.index() != s.index())
@@ -16,10 +18,24 @@ bool valueMatch(const CValue &r,
 }
 
 void cellTest() {
-    CCell c1("A");
-    CCell c2("=8*8");
-    CCell c3("=A1*A4");
-    std::cout << "cellTest OK" << std::endl;
+    CSpreadsheet s;
+    s.setCell(CPos("A4"), "TEST");
+    s.setCell(CPos("A3"), "=A4");
+    s.setCell(CPos("PROG128"), "=(5*2+2)/2");
+    s.setCell(CPos("PROG129"), "=((5*2)^2)/2");
+    s.setCell(CPos("PROG1"), "=PROG129 * 2");
+    auto res = s.getValue(CPos("A4"));
+    cout << get<string>(res) << endl;
+    res = s.getValue(CPos("PROG128"));
+    cout << get<double>(res) << endl;
+    res = s.getValue(CPos("PROG129"));
+    cout << get<double>(res) << endl;
+    res = s.getValue(CPos("PROG129"));
+    cout << get<double>(res) << endl;
+    res = s.getValue(CPos("PROG1"));
+    cout << get<double>(res) << endl;
+
+    cout << "cellTest OK" << std::endl;
 }
 
 void posTest() {
