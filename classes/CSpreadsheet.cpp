@@ -3,6 +3,26 @@
 CSpreadsheet::CSpreadsheet(): m_setRun(0), m_getRun(0) {
 }
 
+CSpreadsheet::CSpreadsheet(const CSpreadsheet &other)
+    : m_sheet(other.m_sheet),
+      m_setRun(other.m_setRun),
+      m_getRun(other.m_getRun) {
+}
+
+CSpreadsheet::CSpreadsheet(CSpreadsheet &&other) noexcept
+    : m_sheet(std::move(other.m_sheet)),
+      m_setRun(other.m_setRun),
+      m_getRun(other.m_getRun) {
+}
+
+CSpreadsheet &CSpreadsheet::operator=(CSpreadsheet other) {
+    using namespace std;
+    swap(other.m_sheet, m_sheet);
+    swap(other.m_setRun, m_setRun);
+    swap(other.m_getRun, m_getRun);
+    return *this;
+}
+
 //
 // bool CSpreadsheet::load(std::istream &is) {
 // }
@@ -10,7 +30,7 @@ CSpreadsheet::CSpreadsheet(): m_setRun(0), m_getRun(0) {
 // bool CSpreadsheet::save(std::ostream &os) const {
 // }
 
-bool CSpreadsheet::setCell(CPos pos, std::string contents) {
+bool CSpreadsheet::setCell(const CPos& pos, const std::string& contents) {
     m_setRun++;
     const auto it = m_sheet.lower_bound(pos);
     if (it != m_sheet.end() && it->first == pos) {

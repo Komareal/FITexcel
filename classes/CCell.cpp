@@ -22,8 +22,10 @@ CCell::CCell(const CCell &other)
       m_valueValidAt(other.m_valueValidAt),
       m_stateGivenAt(other.m_stateGivenAt),
       m_state(other.m_state),
-      m_root(std::make_unique<CASTNode>(*other.m_root)),
-      m_references(other.m_references) {
+      m_root(std::make_unique<CASTNode>(*other.m_root)) {
+    for (const auto& [oPos, oRef]: other.m_references) {
+        m_references.emplace_back(oPos, nullptr);
+    }
 }
 
 CCell::CCell(CCell &&other) noexcept : m_valueValidAt(0), m_stateGivenAt(0), m_state(ECellState::FRESH) {
@@ -46,6 +48,7 @@ CCell &CCell::operator=(CCell other) {
     swap(other.m_stateGivenAt, m_stateGivenAt);
     return *this;
 }
+
 
 CSharedVal CCell::getValue(size_t setRun, size_t getRun, std::map<CPos, CCell> &map) {
     if (m_valueValidAt == setRun)

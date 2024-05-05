@@ -17,12 +17,18 @@ public:
 
     CSpreadsheet();
 
+    CSpreadsheet(const CSpreadsheet &other);
+
+    CSpreadsheet(CSpreadsheet &&other) noexcept;
+
+    CSpreadsheet & operator=(CSpreadsheet other);
+
     bool load(std::istream &is);
 
     bool save(std::ostream &os) const;
 
-    bool setCell(CPos pos,
-                 std::string contents);
+    bool setCell(const CPos& pos,
+                 const std::string& contents);
 
     CValue getValue(const CPos &pos);
 

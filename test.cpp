@@ -199,7 +199,6 @@ void basicTests() {
     assert(valueMatch ( x0 . getValue ( CPos ( "B4" ) ), CValue ( 1056.25 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "B5" ) ), CValue ( 5625.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "B6" ) ), CValue ( 11250.0 ) ));
-    return;
     x1 = x0;
     assert(x0 . setCell ( CPos ( "A2" ), "100" ));
     assert(x1 . setCell ( CPos ( "A2" ), "=A3+A5+A4" ));
@@ -209,12 +208,17 @@ void basicTests() {
     assert(valueMatch ( x0 . getValue ( CPos ( "B4" ) ), CValue ( 12544.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "B5" ) ), CValue ( 19458.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "B6" ) ), CValue ( 38916.0 ) ));
+    cout << get<double>(x0.getValue(CPos("A1")))<< " " << get<double>(x1.getValue(CPos("A1"))) << endl;
+    cout << get<double>(x0.getValue(CPos("A2")))<< " " << get<double>(x1.getValue(CPos("A2"))) << endl;
+    cout << get<double>(x0.getValue(CPos("A3")))<< " " << get<double>(x1.getValue(CPos("A3"))) << endl;
+    cout << get<double>(x0.getValue(CPos("b1")))<< " " << get<double>(x1.getValue(CPos("b1"))) << endl;
     assert(valueMatch ( x1 . getValue ( CPos ( "B1" ) ), CValue ( 3612.0 ) ));
     assert(valueMatch ( x1 . getValue ( CPos ( "B2" ) ), CValue ( -204.0 ) ));
     assert(valueMatch ( x1 . getValue ( CPos ( "B3" ) ), CValue ( 4096.0 ) ));
     assert(valueMatch ( x1 . getValue ( CPos ( "B4" ) ), CValue ( 17424.0 ) ));
     assert(valueMatch ( x1 . getValue ( CPos ( "B5" ) ), CValue ( 24928.0 ) ));
     assert(valueMatch ( x1 . getValue ( CPos ( "B6" ) ), CValue ( 49856.0 ) ));
+    return;
     oss.clear();
     oss.str("");
     assert(x0 . save ( oss ));
