@@ -6,7 +6,7 @@
 
 using std::holds_alternative, std::make_shared, std::string;
 
-CASTProccesser::CASTProccesser(const size_t setRun, const size_t eraseRun, size_t cellPtrValidAt, std::map<CPos, CCell> &map, CPosRefArr &refArr)
+CASTProccesser::CASTProccesser(const size_t setRun, const size_t eraseRun, const size_t cellPtrValidAt, std::map<CPos, CCell> &map, CPosRefArr &refArr)
     : m_setRun(setRun),
       m_eraseRun(eraseRun),
       m_cellPtrValidAt(cellPtrValidAt),
