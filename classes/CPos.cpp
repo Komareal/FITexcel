@@ -55,11 +55,12 @@ size_t CPos::parseBase(const std::string_view &src, const char base, const char 
         if (src[index] < firstChar)
             return res;
 
-        int n = src[index] - firstChar + firstNum;
-
+        int n = src[index];
         // convert lowercase to uppercase
         if (n >= 'a' && n <= 'z')
-            n -= 'A' - 'a';
+            n -= 'a' - 'A';
+        n = n - firstChar + firstNum;
+
 
         if (n > firstChar + base)
             return res;
