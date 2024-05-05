@@ -12,13 +12,20 @@ CSpreadsheet::CSpreadsheet(): m_setRun(0), m_getRun(0) {
 
 bool CSpreadsheet::setCell(CPos pos, std::string contents) {
     m_setRun++;
-    m_sheet.emplace(pos, contents);
+    const auto it = m_sheet.lower_bound(pos);
+    if (it != m_sheet.end() && it->first == pos) {
+        it->second = CCell(contents);
+    } else
+        m_sheet.emplace_hint(it, pos, contents);
     return true;
 }
 
 CValue CSpreadsheet::getValue(const CPos &pos) {
     m_getRun++;
-    const CSharedVal res = m_sheet.at(pos).getValue(m_setRun, m_getRun, m_sheet);
+    const auto it = m_sheet.lower_bound(pos);
+    if (it == m_sheet.end() || it->first != pos)
+        return {};
+    const CSharedVal res = it->second.getValue(m_setRun, m_getRun, m_sheet);
     if (res == nullptr)
         return {};
     return *res;
