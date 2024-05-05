@@ -29,12 +29,12 @@ public:
 
     CCell &operator=(CCell other);
 
-    CSharedVal getValue(size_t setRun, size_t getRun, std::map<CPos, CCell> &map);
+    CSharedVal getValue(size_t setRun, size_t eraseRun, std::map<CPos, CCell> &map);
 
 private:
    CSharedVal m_computedValue;
     size_t m_valueValidAt;
-    size_t m_stateGivenAt;
+    size_t m_ptrCacheValidAt;
     ECellState m_state;
     std::unique_ptr<CASTNode> m_root;
     CPosRefArr m_references;

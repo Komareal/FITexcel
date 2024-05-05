@@ -40,7 +40,7 @@ public:
 private:
     std::map<CPos, CCell> m_sheet;
     size_t m_setRun;
-    size_t m_getRun;
+    size_t m_eraseRun;
 };
 
 

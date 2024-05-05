@@ -6,9 +6,10 @@
 
 using std::holds_alternative, std::make_shared, std::string;
 
-CASTProccesser::CASTProccesser(const size_t setRun, const size_t getRun, std::map<CPos, CCell> &map, CPosRefArr &refArr)
+CASTProccesser::CASTProccesser(const size_t setRun, const size_t eraseRun, size_t cellPtrValidAt, std::map<CPos, CCell> &map, CPosRefArr &refArr)
     : m_setRun(setRun),
-      m_getRun(getRun),
+      m_eraseRun(eraseRun),
+      m_cellPtrValidAt(cellPtrValidAt),
       m_map(map),
       m_refArr(refArr) {
 }
@@ -19,14 +20,15 @@ CSharedVal CASTProccesser::getValue(const CASTNode &node) {
     }
     if (std::holds_alternative<size_t>(node.m_val)) {
         auto [pos, ptr] = m_refArr[std::get<size_t>(node.m_val)];
-        if (ptr == nullptr) {
+        if (ptr == nullptr || m_eraseRun != m_cellPtrValidAt) {
             if (m_map.contains(pos)) {
                 ptr = &m_map.at(pos);
                 m_refArr[std::get<size_t>(node.m_val)] = std::pair(pos, ptr);
-            } else
+            } else {
                 return nullptr;
+            }
         }
-        return ptr->getValue(m_setRun, m_getRun, m_map);
+        return ptr->getValue(m_setRun, m_eraseRun, m_map);
     }
     if (std::holds_alternative<EOpType>(node.m_val)) {
         switch (std::get<EOpType>(node.m_val)) {

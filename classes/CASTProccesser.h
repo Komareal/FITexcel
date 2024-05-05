@@ -10,13 +10,14 @@
 
 class CASTProccesser {
 public:
-    CASTProccesser(size_t setRun, size_t getRun, std::map<CPos, CCell> &map, CPosRefArr &refArr);
+    CASTProccesser(size_t setRun, size_t eraseRun, size_t cellPtrValidAt, std::map<CPos, CCell> &map, CPosRefArr &refArr);
 
     CSharedVal getValue(const CASTNode &node);
 
 private:
     const size_t m_setRun;
-    const size_t m_getRun;
+    const size_t m_eraseRun;
+    const size_t m_cellPtrValidAt;
     std::map<CPos, CCell> &m_map;
     CPosRefArr &m_refArr;
 
