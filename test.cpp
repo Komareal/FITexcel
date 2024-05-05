@@ -139,25 +139,25 @@ void posTest() {
     assert(!exc);
 
     // Moving
-    y = {"B10"};
-    y.relativeMove(25, 33);
+    y = {"B10", false};
+    y = y.relativeMove(25, 33);
     assert(y == CPos("AA43"));
 
-    y = {"$B10"};
-    y.relativeMove(25, 33);
-    assert(y == CPos("$B43"));
+    y = {"$B10", false};
+    y = y.relativeMove(25, 33);
+    assert(y == CPos("$B43", false));
 
-    y = {"B$10"};
-    y.relativeMove(25, 33);
-    assert(y == CPos("AA$10"));
+    y = {"B$10", false};
+    y = y.relativeMove(25, 33);
+    assert(y == CPos("AA$10", false));
 
-    y = {"$B$10"};
-    y.relativeMove(25, 33);
-    assert(y == CPos("$B$10"));
+    y = {"$B$10", false};
+    y = y.relativeMove(25, 33);
+    assert(y == CPos("$B$10", false));
 
-    y = {"B10"};
-    y.relativeMove(-1, -10);
-    assert(y == CPos("A0"));
+    y = {"B10", false};
+    y = y.relativeMove(-1, -10);
+    assert(y == CPos("A0", false));
 
     std::cout << "posTest OK" << std::endl;
 }
@@ -222,36 +222,6 @@ void basicTests() {
     assert(valueMatch ( x1 . getValue ( CPos ( "B4" ) ), CValue ( 17424.0 ) ));
     assert(valueMatch ( x1 . getValue ( CPos ( "B5" ) ), CValue ( 24928.0 ) ));
     assert(valueMatch ( x1 . getValue ( CPos ( "B6" ) ), CValue ( 49856.0 ) ));
-    return;
-    oss.clear();
-    oss.str("");
-    assert(x0 . save ( oss ));
-    data = oss.str();
-    iss.clear();
-    iss.str(data);
-    assert(x1 . load ( iss ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B1" ) ), CValue ( 3012.0 ) ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B2" ) ), CValue ( -194.0 ) ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B3" ) ), CValue ( 4096.0 ) ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B4" ) ), CValue ( 12544.0 ) ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B5" ) ), CValue ( 19458.0 ) ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B6" ) ), CValue ( 38916.0 ) ));
-    assert(x0 . setCell ( CPos ( "A3" ), "4e1" ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B1" ) ), CValue ( 3012.0 ) ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B2" ) ), CValue ( -194.0 ) ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B3" ) ), CValue ( 4096.0 ) ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B4" ) ), CValue ( 12544.0 ) ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B5" ) ), CValue ( 19458.0 ) ));
-    assert(valueMatch ( x1 . getValue ( CPos ( "B6" ) ), CValue ( 38916.0 ) ));
-    oss.clear();
-    oss.str("");
-    assert(x0 . save ( oss ));
-    data = oss.str();
-    for (size_t i = 0; i < std::min<size_t>(data.length(), 10); i++)
-        data[i] ^= 0x5a;
-    iss.clear();
-    iss.str(data);
-    assert(! x1 . load ( iss ));
     assert(x0 . setCell ( CPos ( "D0" ), "10" ));
     assert(x0 . setCell ( CPos ( "D1" ), "20" ));
     assert(x0 . setCell ( CPos ( "D2" ), "30" ));
@@ -299,5 +269,35 @@ void basicTests() {
     assert(valueMatch ( x0 . getValue ( CPos ( "H12" ) ), CValue ( 25.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "H13" ) ), CValue ( -22.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "H14" ) ), CValue ( -22.0 ) ));
+    return;
+    oss.clear();
+    oss.str("");
+    assert(x0 . save ( oss ));
+    data = oss.str();
+    iss.clear();
+    iss.str(data);
+    assert(x1 . load ( iss ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B1" ) ), CValue ( 3012.0 ) ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B2" ) ), CValue ( -194.0 ) ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B3" ) ), CValue ( 4096.0 ) ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B4" ) ), CValue ( 12544.0 ) ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B5" ) ), CValue ( 19458.0 ) ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B6" ) ), CValue ( 38916.0 ) ));
+    assert(x0 . setCell ( CPos ( "A3" ), "4e1" ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B1" ) ), CValue ( 3012.0 ) ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B2" ) ), CValue ( -194.0 ) ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B3" ) ), CValue ( 4096.0 ) ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B4" ) ), CValue ( 12544.0 ) ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B5" ) ), CValue ( 19458.0 ) ));
+    assert(valueMatch ( x1 . getValue ( CPos ( "B6" ) ), CValue ( 38916.0 ) ));
+    oss.clear();
+    oss.str("");
+    assert(x0 . save ( oss ));
+    data = oss.str();
+    for (size_t i = 0; i < std::min<size_t>(data.length(), 10); i++)
+        data[i] ^= 0x5a;
+    iss.clear();
+    iss.str(data);
+    assert(! x1 . load ( iss ));
 }
 #endif

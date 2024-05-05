@@ -3,7 +3,6 @@
 #include "../header.h"
 
 
-
 /**
  * Represents cell address like "A7" as X and Y size_t coordinates
  * X is converted from base 2 (A = 0) to base 2 (size_t)
@@ -12,10 +11,12 @@
  */
 class CPos {
 public:
-    // ------------ Constructors
-    CPos(std::string_view str);
+    friend class CSpreadsheet;
 
-    CPos(std::string_view str, bool ignore_colon, size_t &index);
+    // ------------ Constructors
+    CPos(std::string_view str, bool ignoreFix = true);
+
+    CPos(std::string_view str, bool ignoreColon, size_t &index);
 
     CPos();
 
@@ -26,7 +27,7 @@ public:
      * @param offsetX
      * @param offsetY
      */
-    void relativeMove(size_t offsetX, size_t offsetY);
+    CPos relativeMove(size_t offsetX, size_t offsetY) const;
 
     // ------------ Copy and move
     CPos(const CPos &other);
@@ -34,6 +35,8 @@ public:
     CPos(CPos &&other) noexcept;
 
     CPos &operator=(CPos other);
+
+    bool equalsWithFix(const CPos &o);
 
     // ------------ Equality ops
     friend bool operator==(const CPos &lhs, const CPos &rhs);
@@ -86,16 +89,18 @@ private:
      * wrapper for parsing first (Letter) part of address with post checks, also checks for '$' before address
      * @param str string containing the address
      * @param index from where to start and where it ends
+     * @param ignoreFix
      */
-    void parseX(const std::string_view &str, size_t &index);
+    void parseX(const std::string_view &str, size_t &index, bool ignoreFix);
 
     /**
      * wrapper for parsing second (base 10) part of address with post checks, also checks for '$' before address
      * @param str string containing the address
      * @param index from where to start and where it ends
      * @param ignore_col
+     * @param ignoreFix
      */
-    void parseY(const std::string_view &str, size_t &index, bool ignore_col);
+    void parseY(const std::string_view &str, size_t &index, bool ignore_col, bool ignoreFix);
 };
 
 #endif //CPOS_H

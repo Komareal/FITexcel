@@ -21,19 +21,21 @@ public:
 
     CSpreadsheet(CSpreadsheet &&other) noexcept;
 
-    CSpreadsheet & operator=(CSpreadsheet other);
+    CSpreadsheet &operator=(CSpreadsheet other);
 
     bool load(std::istream &is);
 
     bool save(std::ostream &os) const;
 
-    bool setCell(const CPos& pos,
-                 const std::string& contents);
+    bool setCell(const CPos &pos, const std::string &contents);
+    bool setCell(const CPos &pos, const CCell & cell);
+
+    bool eraseCell(const CPos &pos);
 
     CValue getValue(const CPos &pos);
 
-    void copyRect(CPos dst,
-                  CPos src,
+    void copyRect(const CPos &dst,
+                  const CPos &src,
                   int w = 1,
                   int h = 1);
 

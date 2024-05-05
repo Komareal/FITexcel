@@ -13,6 +13,7 @@ using CPosRefArr = std::vector<std::pair<CPos, CCell *> >;
 class CCell {
 public:
     friend class CSpreadsheet;
+
     enum class ECellState {
         FRESH,
         OPEN,
@@ -31,16 +32,17 @@ public:
 
     CSharedVal getValue(size_t setRun, size_t eraseRun, std::map<CPos, CCell> &map);
 
+    void moveReferences(size_t x, size_t y);
+
 private:
-   CSharedVal m_computedValue;
+    CSharedVal m_computedValue;
     size_t m_valueValidAt;
     size_t m_ptrCacheValidAt;
     ECellState m_state;
     std::unique_ptr<CASTNode> m_root;
     CPosRefArr m_references;
 
-    void saveVal(const CSharedVal &val, size_t setRun);
-
+    void saveVal(const CSharedVal &val);
 };
 
 

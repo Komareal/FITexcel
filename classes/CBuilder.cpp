@@ -25,7 +25,7 @@ void CBuilder::makeOp(EOpType type, const size_t childnum) {
 
 size_t CBuilder::emplaceRef(const CPos &pos) const {
     for (size_t i = 0; i < m_references.size(); i++)
-        if (m_references[i].first == pos)
+        if (m_references[i].first.equalsWithFix(pos))
             return i;
 
     m_references.emplace_back(pos, nullptr);
@@ -89,7 +89,7 @@ void CBuilder::valString(std::string val) {
 }
 
 void CBuilder::valReference(const std::string val) {
-    const CPos ref(val);
+    const CPos ref(val, false);
     m_stack.emplace(emplaceRef(ref));
 }
 

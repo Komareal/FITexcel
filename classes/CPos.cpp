@@ -1,21 +1,21 @@
 #include "CPos.h"
 // ------------ Constructors
-CPos::CPos(const std::string_view str): m_x(0), m_y(0), m_fixX(false), m_fixY(false) {
+CPos::CPos(const std::string_view str, const bool ignoreFix): m_x(0), m_y(0), m_fixX(false), m_fixY(false) {
     size_t index = 0;
-    parseX(str, index);
-    parseY(str, index, false);
+    parseX(str, index, ignoreFix);
+    parseY(str, index, false, ignoreFix);
 }
 
-CPos::CPos(const std::string_view str, const bool ignore_colon, size_t &index): m_x(0), m_y(0), m_fixX(false), m_fixY(false) {
-    parseX(str, index);
-    parseY(str, index, ignore_colon);
+CPos::CPos(const std::string_view str, const bool ignoreColon, size_t &index): m_x(0), m_y(0), m_fixX(false), m_fixY(false) {
+    parseX(str, index, true);
+    parseY(str, index, ignoreColon, true);
 }
 
 CPos::CPos(): m_x(0), m_y(0), m_fixX(false), m_fixY(false) {
 }
 
-void CPos::parseX(const std::string_view &str, size_t &index) {
-    if (str[index] == '$') {
+void CPos::parseX(const std::string_view &str, size_t &index, const bool ignoreFix) {
+    if (!ignoreFix && str[index] == '$') {
         m_fixX = true;
         index++;
     }
@@ -25,8 +25,8 @@ void CPos::parseX(const std::string_view &str, size_t &index) {
         throw std::invalid_argument("CPos: Invalid cell address");
 }
 
-void CPos::parseY(const std::string_view &str, size_t &index, bool ignore_col) {
-    if (str[index] == '$') {
+void CPos::parseY(const std::string_view &str, size_t &index, const bool ignore_col, const bool ignoreFix) {
+    if (!ignoreFix && str[index] == '$') {
         m_fixY = true;
         index++;
     }
@@ -80,14 +80,17 @@ size_t CPos::parseBase(const std::string_view &src, const char base, const char 
 }
 
 // ------------ Utils
-void CPos::relativeMove(const size_t offsetX, const size_t offsetY) {
+CPos CPos::relativeMove(const size_t offsetX, const size_t offsetY) const {
+    CPos res = *this;
+
     if (!m_fixX) {
-        m_x += offsetX;
+        res.m_x += offsetX;
     }
 
     if (!m_fixY) {
-        m_y += offsetY;
+        res.m_y += offsetY;
     }
+    return res;
 }
 
 
@@ -107,8 +110,13 @@ CPos &CPos::operator=(CPos other) {
 
 
 // ------------ Equality ops
+
+bool CPos::equalsWithFix(const CPos &o) {
+    return std::tie(m_x, m_y, m_fixX, m_fixY) == std::tie(o.m_x, o.m_y, o.m_fixX, o.m_fixY);
+}
+
 bool operator==(const CPos &lhs, const CPos &rhs) {
-    return std::tie(lhs.m_x, lhs.m_y, lhs.m_fixX, lhs.m_fixY) == std::tie(rhs.m_x, rhs.m_y, rhs.m_fixX, rhs.m_fixY);
+    return std::tie(lhs.m_x, lhs.m_y) == std::tie(rhs.m_x, rhs.m_y);
 }
 
 bool operator!=(const CPos &lhs, const CPos &rhs) {

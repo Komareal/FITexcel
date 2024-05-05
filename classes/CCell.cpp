@@ -54,7 +54,7 @@ CSharedVal CCell::getValue(const size_t setRun, const size_t eraseRun, std::map<
     CSharedVal res;
     if (m_valueValidAt == setRun) {
         if (m_state == CCell::ECellState::OPEN) {
-            saveVal(res, setRun);
+            saveVal(res);
             return res;
         }
         return m_computedValue;
@@ -64,12 +64,18 @@ CSharedVal CCell::getValue(const size_t setRun, const size_t eraseRun, std::map<
     m_state = CCell::ECellState::OPEN;
     CASTProccesser proccesser(setRun, eraseRun, m_ptrCacheValidAt, map, m_references);
     res = proccesser.getValue(*m_root);
-    saveVal(res, setRun);
+    saveVal(res);
     return res;
 }
 
+void CCell::moveReferences(const size_t x, const size_t y) {
+    for (auto it = m_references.begin(); it != m_references.end(); ++it) {
+        *it = {it->first.relativeMove(x,y),nullptr};
+    }
+}
 
-void CCell::saveVal(const CSharedVal &val, const size_t setRun) {
+
+void CCell::saveVal(const CSharedVal &val) {
     m_computedValue = val;
     m_state = ECellState::CLOSED;
 }
