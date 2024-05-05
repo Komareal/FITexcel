@@ -95,10 +95,14 @@ bool CSpreadsheet::save(std::ostream &os) const {
 bool CSpreadsheet::setCell(const CPos &pos, const std::string &contents) {
     m_setRun++;
     const auto it = m_sheet.lower_bound(pos);
-    if (it != m_sheet.end() && it->first == pos) {
-        it->second = CCell(contents);
-    } else {
-        m_sheet.emplace_hint(it, pos, contents);
+    try {
+        if (it != m_sheet.end() && it->first == pos) {
+            it->second = CCell(contents);
+        } else {
+            m_sheet.emplace_hint(it, pos, contents);
+        }
+    } catch (...) {
+        return false;
     }
     return true;
 }
@@ -106,10 +110,14 @@ bool CSpreadsheet::setCell(const CPos &pos, const std::string &contents) {
 bool CSpreadsheet::setCell(const CPos &pos, const CCell &cell) {
     m_setRun++;
     const auto it = m_sheet.lower_bound(pos);
-    if (it != m_sheet.end() && it->first == pos) {
-        it->second = cell;
-    } else {
-        m_sheet.emplace_hint(it, pos, cell);
+    try {
+        if (it != m_sheet.end() && it->first == pos) {
+            it->second = cell;
+        } else {
+            m_sheet.emplace_hint(it, pos, cell);
+        }
+    } catch (...) {
+        return false;
     }
     return true;
 }
