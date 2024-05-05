@@ -3,16 +3,19 @@
 #include "../header.h"
 
 #include "CCell.h"
+
+#ifndef __PROGTEST__
 constexpr unsigned SPREADSHEET_CYCLIC_DEPS = 0x01;
 constexpr unsigned SPREADSHEET_FUNCTIONS = 0x02;
 constexpr unsigned SPREADSHEET_FILE_IO = 0x04;
 constexpr unsigned SPREADSHEET_SPEED = 0x08;
 constexpr unsigned SPREADSHEET_PARSER = 0x10;
+#endif
 
 class CSpreadsheet {
 public:
     static unsigned capabilities() {
-        return 0;
+        return SPREADSHEET_CYCLIC_DEPS | SPREADSHEET_FILE_IO | SPREADSHEET_SPEED;
     }
 
     CSpreadsheet();

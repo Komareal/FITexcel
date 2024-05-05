@@ -5,8 +5,9 @@
 
 class CCell;
 class CPos;
+#ifndef __PROGTEST__
 using CValue = std::variant<std::monostate, double, std::string>;
-
+#endif
 using CSharedVal = std::shared_ptr<CValue>;
 
 enum EOpType {

@@ -34,7 +34,6 @@
 #include <charconv>
 #include <span>
 #include <utility>
-#include "classes/expression.h"
 
 #define BASIC_TEST
 #endif /* __PROGTEST__ */

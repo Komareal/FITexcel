@@ -1,14 +1,19 @@
+#include "header.h"
+#include "classes/CASTNode.h"
+#include "classes/CCell.h"
+#include "classes/expression.h"
+#include "classes/CPos.h"
+#include "classes/CSpreadsheet.h"
+#include "classes/CBuilder.h"
 #ifndef __PROGTEST__
 #include "test.h"
-#endif /* __PROGTEST__ */
 
-#ifndef __PROGTEST__
 int main() {
-    posTest();
-    cellTest();
-
+    // posTest();
+    // cellTest();
+    runTests();
 #ifdef BASIC_TEST
-    basicTests();
+    // basicTests();
 #endif /* BASIC_TEST */
 
     return EXIT_SUCCESS;

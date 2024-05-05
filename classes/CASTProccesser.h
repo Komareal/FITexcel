@@ -1,7 +1,3 @@
-//
-// Created by ales on 5/4/24.
-//
-
 #ifndef CASTPROCCESSER_H
 #define CASTPROCCESSER_H
 #include "../header.h"

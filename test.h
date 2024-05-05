@@ -14,7 +14,7 @@
 
 
 void cellTest();
-
+void runTests();
 void posTest();
 #ifdef BASIC_TEST
 void basicTests();

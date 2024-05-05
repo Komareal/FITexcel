@@ -1,7 +1,3 @@
-//
-// Created by ales on 5/4/24.
-//
-
 #include "CASTProccesser.h"
 
 using std::holds_alternative, std::make_shared, std::string;

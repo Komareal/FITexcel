@@ -2,13 +2,13 @@
 
 CASTNode::CASTNode(CASTNodeVal val)
     : m_val(std::move(val)),
-      m_childern({}),
+      m_childern(),
       m_childernSize(0) {
 }
 
 CASTNode::CASTNode(const CASTNode &other)
     : m_val(other.m_val),
-      m_childern({}),
+      m_childern(),
       m_childernSize(other.m_childernSize) {
     for (size_t i = 0; i < 3; i++) {
         if (i < m_childernSize)
@@ -16,7 +16,7 @@ CASTNode::CASTNode(const CASTNode &other)
     }
 }
 
-CASTNode::CASTNode(CASTNode &&other) noexcept : m_val(std::move(other.m_val)), m_childern({}), m_childernSize(other.m_childernSize) {
+CASTNode::CASTNode(CASTNode &&other) noexcept : m_val(std::move(other.m_val)), m_childern(), m_childernSize(other.m_childernSize) {
     std::swap(m_childern, other.m_childern);
 }
 
