@@ -36,6 +36,6 @@
 #include <utility>
 #include "classes/expression.h"
 
-// #define BASIC_TEST
+#define BASIC_TEST
 #endif /* __PROGTEST__ */
 #endif //HEADER_H

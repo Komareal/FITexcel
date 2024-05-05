@@ -105,5 +105,23 @@ void CBuilder::valRange(const std::string val) {
     );
 }
 
-void CBuilder::funcCall(std::string fnName, int paramCount) {
+void CBuilder::funcCall(const std::string fnName, const int paramCount) {
+    switch (fnName) {
+        case "sum":
+            m_stack.emplace(EFuncType::SUM);
+        case "count":
+            m_stack.emplace(EFuncType::CNT);
+        case "min":
+            m_stack.emplace(EFuncType::MIN);
+        case "max":
+            m_stack.emplace(EFuncType::MAX);
+        case "countval":
+            m_stack.emplace(EFuncType::CNTVAL);
+        case "if":
+            m_stack.emplace(EFuncType::IF);
+        default:
+            // Just so compiler doesnt complain about not using the value
+            if (paramCount == 0)
+                return;
+    }
 }

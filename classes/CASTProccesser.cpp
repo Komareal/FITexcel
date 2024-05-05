@@ -17,6 +17,17 @@ CSharedVal CASTProccesser::getValue(const CASTNode &node) {
     if (std::holds_alternative<CSharedVal>(node.m_val)) {
         return std::get<CSharedVal>(node.m_val);
     }
+    if (std::holds_alternative<size_t>(node.m_val)) {
+        auto [pos, ptr] = m_refArr[std::get<size_t>(node.m_val)];
+        if (ptr == nullptr) {
+            if (m_map.contains(pos)) {
+                ptr = &m_map.at(pos);
+                m_refArr[std::get<size_t>(node.m_val)] = std::pair(pos, ptr);
+            } else
+                return nullptr;
+        }
+        return ptr->getValue(m_setRun, m_getRun, m_map);
+    }
     if (std::holds_alternative<EOpType>(node.m_val)) {
         switch (std::get<EOpType>(node.m_val)) {
             case ADD:
@@ -45,18 +56,22 @@ CSharedVal CASTProccesser::getValue(const CASTNode &node) {
                 return ge(node);
         }
     }
-    if (std::holds_alternative<size_t>(node.m_val)) {
-        auto  [pos, ptr] = m_refArr[std::get<size_t>(node.m_val)];
-        if (ptr == nullptr) {
-            if (m_map.contains(pos)) {
-                ptr = &m_map.at(pos);
-                m_refArr[std::get<size_t>(node.m_val)] = std::pair(pos, ptr);
-            }
-            else
-                return nullptr;
-        }
-        return ptr->getValue(m_setRun, m_getRun, m_map);
-    }
+    // if (std::holds_alternative<EFuncType>(node.m_val)) {
+    //     switch (std::get<EFuncType>(node.m_val)) {
+    //         case SUM:
+    //             break;
+    //         case CNT:
+    //             break;
+    //         case MIN:
+    //             break;
+    //         case MAX:
+    //             break;
+    //         case CNTVAL:
+    //             break;
+    //         case IF:
+    //             break;
+    //     }
+    // }
     return nullptr;
 }
 

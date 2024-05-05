@@ -10,7 +10,7 @@
 
 class CASTProccesser {
 public:
-    CASTProccesser(size_t setRun, size_t getRun, std::map<CPos, CCell> &map, CPosRefArr & refArr);
+    CASTProccesser(size_t setRun, size_t getRun, std::map<CPos, CCell> &map, CPosRefArr &refArr);
 
     CSharedVal getValue(const CASTNode &node);
 
@@ -18,11 +18,11 @@ private:
     const size_t m_setRun;
     const size_t m_getRun;
     std::map<CPos, CCell> &m_map;
-    CPosRefArr & m_refArr;
+    CPosRefArr &m_refArr;
 
-    bool getBinaryOpValues(const CASTNode &node, CSharedVal & first, CSharedVal & second);
+    bool getBinaryOpValues(const CASTNode &node, CSharedVal &first, CSharedVal &second);
 
-    bool getUnaryOpValue(const CASTNode &node,CSharedVal & val);
+    bool getUnaryOpValue(const CASTNode &node, CSharedVal &val);
 
     CSharedVal add(const CASTNode &node);
 
