@@ -14,6 +14,9 @@ CPos::CPos(const std::string_view str, const bool ignoreColon, size_t &index): m
 CPos::CPos(): m_x(0), m_y(0), m_fixX(false), m_fixY(false) {
 }
 
+CPos::CPos(const size_t x, const size_t y): m_x(x), m_y(y), m_fixX(false), m_fixY(false) {
+}
+
 void CPos::parseX(const std::string_view &str, size_t &index, const bool ignoreFix) {
     if (!ignoreFix && str[index] == '$') {
         m_fixX = true;

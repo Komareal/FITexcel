@@ -1,5 +1,6 @@
 #include "CSpreadsheet.h"
 
+
 CSpreadsheet::CSpreadsheet(): m_setRun(0), m_eraseRun(0) {
 }
 
@@ -23,12 +24,56 @@ CSpreadsheet &CSpreadsheet::operator=(CSpreadsheet other) {
     return *this;
 }
 
-//
-// bool CSpreadsheet::load(std::istream &is) {
-// }
-//
-// bool CSpreadsheet::save(std::ostream &os) const {
-// }
+
+bool CSpreadsheet::load(std::istream &is) {
+    using namespace std;
+    string cellstr, whole, line;
+    size_t controlHash;
+    CSpreadsheet nexSheet;
+    nexSheet.m_setRun = 1;
+    whole.resize(17);
+    is.read(&whole[0], 16);
+    stringstream tmpis(whole);
+    if (!(tmpis >> hex >> controlHash))
+        return false;
+    constexpr std::hash<std::string> hasher;
+    is.ignore(1);
+    tmpis = stringstream();
+    tmpis << is.rdbuf();
+    whole = tmpis.str();
+    if (hasher(whole) != controlHash)
+        return false;
+    while (tmpis.good()) {
+        size_t x, y, strlen;
+        if (!(tmpis >> hex >> x >> y >> strlen))
+            break;
+        cellstr.resize(strlen);
+        tmpis.ignore(1);
+        tmpis.read(&cellstr[0], strlen);
+        nexSheet.m_sheet.emplace(CPos(x, y), cellstr);
+        tmpis.ignore(1);
+    }
+    if (!tmpis.eof())
+        return false;
+    *this = nexSheet;
+    return true;
+}
+
+bool CSpreadsheet::save(std::ostream &os) const {
+    using namespace std;
+    constexpr char sep = ' ';
+    ostringstream tmpos, hextmp;
+    for (const auto &[pos, cell]: m_sheet) {
+        tmpos << hex << pos.m_x << sep << pos.m_y << sep << cell.m_str.length();
+        tmpos << dec << sep << cell.m_str << sep; //<< std::endl;
+    }
+    constexpr hash<std::string> hasher;
+    hextmp << hex << hasher(tmpos.str());
+    string hash = hextmp.str();
+    hash.insert(0, max(0ul, 16 - hash.size()), '0');
+    os << hash << sep << tmpos.str();
+    return true;
+}
 
 bool CSpreadsheet::setCell(const CPos &pos, const std::string &contents) {
     m_setRun++;

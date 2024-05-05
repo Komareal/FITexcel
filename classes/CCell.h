@@ -35,6 +35,7 @@ public:
     void moveReferences(size_t x, size_t y);
 
 private:
+    std::string m_str;
     CSharedVal m_computedValue;
     size_t m_valueValidAt;
     size_t m_ptrCacheValidAt;

@@ -20,6 +20,8 @@ public:
 
     CPos();
 
+    CPos(size_t x, size_t y);
+
     // ------------ Utils
 
     /**

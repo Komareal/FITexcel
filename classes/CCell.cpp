@@ -4,8 +4,9 @@
 #include "CBuilder.h"
 
 // ------------ Constructors
-CCell::CCell(std::string_view str)
-    : m_valueValidAt(0),
+CCell::CCell(const std::string_view str)
+    : m_str(str),
+      m_valueValidAt(0),
       m_ptrCacheValidAt(0),
       m_state(ECellState::FRESH) {
     CBuilder builder(str, m_references);
@@ -18,7 +19,8 @@ CCell::CCell(std::string_view str)
 
 
 CCell::CCell(const CCell &other)
-    : m_computedValue(other.m_computedValue),
+    : m_str(other.m_str),
+      m_computedValue(other.m_computedValue),
       m_valueValidAt(other.m_valueValidAt),
       m_ptrCacheValidAt(other.m_ptrCacheValidAt),
       m_state(other.m_state),
@@ -30,6 +32,7 @@ CCell::CCell(const CCell &other)
 
 CCell::CCell(CCell &&other) noexcept : m_valueValidAt(0), m_ptrCacheValidAt(0), m_state(ECellState::FRESH) {
     using std::swap;
+    swap(other.m_str, m_str);
     swap(other.m_computedValue, m_computedValue);
     swap(other.m_valueValidAt, m_valueValidAt);
     swap(other.m_root, m_root);
@@ -40,6 +43,7 @@ CCell::CCell(CCell &&other) noexcept : m_valueValidAt(0), m_ptrCacheValidAt(0), 
 
 CCell &CCell::operator=(CCell other) {
     using std::swap;
+    swap(other.m_str, m_str);
     swap(other.m_computedValue, m_computedValue);
     swap(other.m_valueValidAt, m_valueValidAt);
     swap(other.m_root, m_root);
@@ -70,7 +74,7 @@ CSharedVal CCell::getValue(const size_t setRun, const size_t eraseRun, std::map<
 
 void CCell::moveReferences(const size_t x, const size_t y) {
     for (auto it = m_references.begin(); it != m_references.end(); ++it) {
-        *it = {it->first.relativeMove(x,y),nullptr};
+        *it = {it->first.relativeMove(x, y), nullptr};
     }
 }
 

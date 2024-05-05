@@ -51,6 +51,21 @@ void cellTest() {
     res = s.getValue(CPos("PROG1"));
     cout << get<double>(res) << endl;
 
+    CSpreadsheet l,m;
+    l.setCell(CPos("A4"), "TEST");
+    l.setCell(CPos("A2"), "dTEST");
+    std::ostringstream oss;
+    std::istringstream iss;
+    std::string data;
+    oss.clear();
+    oss.str("");
+    assert(l . save ( oss ));
+    data = oss.str();
+    std::cout << data << endl << endl;
+    iss.clear();
+    iss.str(data);
+    assert(m . load ( iss ));
+
     cout << "cellTest OK" << std::endl;
 }
 
@@ -269,10 +284,10 @@ void basicTests() {
     assert(valueMatch ( x0 . getValue ( CPos ( "H12" ) ), CValue ( 25.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "H13" ) ), CValue ( -22.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "H14" ) ), CValue ( -22.0 ) ));
-    return;
     oss.clear();
     oss.str("");
     assert(x0 . save ( oss ));
+    cout << oss.str() << endl;
     data = oss.str();
     iss.clear();
     iss.str(data);
