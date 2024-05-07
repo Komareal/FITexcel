@@ -3,19 +3,19 @@
 #include "../header.h"
 
 #include "CCell.h"
+#include "AST/CASTBinaryNode.h"
+#include "AST/CASTNodePtr.h"
+#include "AST/CASTUnaryNode.h"
 #ifndef __PROGTEST__
 #include "expression.h"
 #endif
 
 class CBuilder : public CExprBuilder {
 public:
-    CBuilder(const std::string_view &str, CPosRefArr &references);
+    explicit CBuilder(CRefManager &m_ref_manager);
 
-    std::unique_ptr<CASTNode> getRoot();
+    CASTNodePtr getRoot();
 
-    void makeOp(EOpType type, size_t childnum);
-
-    [[nodiscard]] size_t emplaceRef(const CPos &pos) const;
 
     void opAdd() override;
 
@@ -52,9 +52,12 @@ public:
     void funcCall(std::string fnName, int paramCount) override;
 
 private:
-    const std::string_view &m_str;
-    std::stack<CASTNode> m_stack;
-    CPosRefArr &m_references;
+    std::stack<CASTNodePtr> m_stack;
+    CRefManager &m_refManager;
+
+    void makeBinOp(CSharedVal (*op_fnc)(const CSharedVal &, const CSharedVal &), CASTBinaryNode::EBinaryType type);
+
+    void makeUnOp(CSharedVal (*op_fnc)(const CSharedVal &), CASTUnaryNode::EUnaryType type);
 };
 
 

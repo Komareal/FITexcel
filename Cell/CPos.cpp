@@ -97,10 +97,35 @@ CPos CPos::relativeMove(const size_t offsetX, const size_t offsetY) const {
 }
 
 
+void CPos::print(std::ostream &os) const {
+    os << " ";
+    if (m_fixX) {
+        os << "$";
+    }
+
+    if (m_x == 0) {
+        os << "A";
+    } else {
+        size_t tmpX = m_x;
+        std::string tmpstr;
+        while (tmpX > 0) {
+            tmpstr = static_cast<char>('A' + (tmpX % 26) - 1) + tmpstr;
+            tmpX /= 26;
+        }
+        os << tmpstr;
+    }
+    if (m_fixY) {
+        os << "$";
+    }
+
+    os << m_y;
+    os << " ";
+}
+
 // ------------ Copy and move
 CPos::CPos(const CPos &other) = default;
 
-CPos::CPos(CPos &&other) noexcept: m_x(other.m_x), m_y(other.m_y), m_fixX(other.m_fixX), m_fixY(other.m_fixY) {
+CPos::CPos(CPos &&other) noexcept: m_x(std::move(other.m_x)), m_y(std::move(other.m_y)), m_fixX(std::move(other.m_fixX)), m_fixY(std::move(other.m_fixY)) {
 }
 
 CPos &CPos::operator=(CPos other) {

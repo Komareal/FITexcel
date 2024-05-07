@@ -5,13 +5,9 @@
 #ifndef TEST_H
 #define TEST_H
 #include "header.h"
-#include "classes/CASTNode.h"
-#include "classes/CCell.h"
-#include "classes/expression.h"
-#include "classes/CPos.h"
-#include "classes/CSpreadsheet.h"
-#include "classes/CBuilder.h"
-
+#include "CSpreadsheet.h"
+#include "Cell/CPos.h"
+#include "Cell/expression.h"
 
 void cellTest();
 void runTests();

@@ -31,6 +31,8 @@ public:
      */
     CPos relativeMove(size_t offsetX, size_t offsetY) const;
 
+    void print(std::ostream &os) const;
+
     // ------------ Copy and move
     CPos(const CPos &other);
 

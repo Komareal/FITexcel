@@ -41,11 +41,11 @@ bool CSpreadsheet::load(std::istream &is) {
         return false;
 
     constexpr std::hash<std::string> hasher;
-    is.ignore(1);
     tmpis = stringstream();
     tmpis << is.rdbuf();
     whole = tmpis.str();
 
+    auto tmp = hasher(whole);
     if (hasher(whole) != controlHash)
         return false;
 
@@ -76,9 +76,15 @@ bool CSpreadsheet::save(std::ostream &os) const {
     using namespace std;
     constexpr char sep = ' ';
     ostringstream tmpos, hextmp;
+    tmpos << endl;
     for (const auto &[pos, cell]: m_sheet) {
-        tmpos << hex << pos.m_x << sep << pos.m_y << sep << cell.m_str.length();
-        tmpos << dec << sep << cell.m_str << sep;
+        stringstream cellStr;
+        if (!cell.m_root.m_ptr->isVal())
+            cellStr << "=";
+        cell.m_root.m_ptr->print(cellStr, cell.m_refManager);
+
+        tmpos << hex << pos.m_x << sep << pos.m_y << sep << cellStr.str().length();
+        tmpos << dec << sep << cellStr.str() << endl;
     }
 
     constexpr hash<std::string> hasher;
@@ -87,7 +93,7 @@ bool CSpreadsheet::save(std::ostream &os) const {
 
     hash.insert(0, max(0ul, 16 - hash.size()), '0');
 
-    os << hash << sep << tmpos.str();
+    os << hash << tmpos.str();
 
     return true;
 }
@@ -102,6 +108,7 @@ bool CSpreadsheet::setCell(const CPos &pos, const std::string &contents) {
             m_sheet.emplace_hint(it, pos, contents);
         }
     } catch (...) {
+        m_setRun--;
         return false;
     }
     return true;
@@ -136,10 +143,20 @@ CValue CSpreadsheet::getValue(const CPos &pos) {
     const auto it = m_sheet.lower_bound(pos);
     if (it == m_sheet.end() || it->first != pos)
         return {};
-    const CSharedVal res = it->second.getValue(m_setRun, m_eraseRun, m_sheet);
+    const CSharedVal res = getValue(&it->second);
     if (res == nullptr)
         return {};
     return *res;
+}
+
+CSharedVal CSpreadsheet::getValue(CCell *cell) {
+    if (cell == nullptr)
+        return nullptr;
+    cell->m_refManager.m_base = this;
+    const CSharedVal res = cell->getValue(m_setRun);
+    if (res == nullptr)
+        return nullptr;
+    return res;
 }
 
 void CSpreadsheet::copyRect(const CPos &dst, const CPos &src, const int w, const int h) {
@@ -147,6 +164,7 @@ void CSpreadsheet::copyRect(const CPos &dst, const CPos &src, const int w, const
     const size_t xOffset = dst.m_x - src.m_x;
     const size_t yOffset = dst.m_y - src.m_y;
     m_eraseRun++;
+    m_setRun++;
 
     for (size_t x = 0; x < static_cast<size_t>(w); x++) {
         for (size_t y = 0; y < static_cast<size_t>(h); y++) {
@@ -165,7 +183,7 @@ void CSpreadsheet::copyRect(const CPos &dst, const CPos &src, const int w, const
                 eraseCell(ofsDst);
             } else {
                 CCell &cell = tmpIt->second;
-                cell.moveReferences(xOffset, yOffset);
+                cell.m_refManager.moveReferences(xOffset, yOffset);
                 setCell(ofsDst, cell);
             }
         }

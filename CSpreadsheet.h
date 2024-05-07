@@ -1,8 +1,8 @@
 #ifndef CSPREADSHEET_H
 #define CSPREADSHEET_H
-#include "../header.h"
+#include "header.h"
 
-#include "CCell.h"
+#include "Cell/CCell.h"
 
 #ifndef __PROGTEST__
 constexpr unsigned SPREADSHEET_CYCLIC_DEPS = 0x01;
@@ -14,6 +14,8 @@ constexpr unsigned SPREADSHEET_PARSER = 0x10;
 
 class CSpreadsheet {
 public:
+    friend class CRefManager;
+
     static unsigned capabilities() {
         return SPREADSHEET_CYCLIC_DEPS | SPREADSHEET_FILE_IO | SPREADSHEET_SPEED;
     }
@@ -31,11 +33,14 @@ public:
     bool save(std::ostream &os) const;
 
     bool setCell(const CPos &pos, const std::string &contents);
-    bool setCell(const CPos &pos, const CCell & cell);
+
+    bool setCell(const CPos &pos, const CCell &cell);
 
     bool eraseCell(const CPos &pos);
 
     CValue getValue(const CPos &pos);
+
+    CSharedVal getValue(CCell *cell);
 
     void copyRect(const CPos &dst,
                   const CPos &src,

@@ -38,7 +38,7 @@ void saveLoad(CSpreadsheet &spreadsheet) {
     oss.str("");
     assert(spreadsheet.save(oss));
     data = oss.str();
-    std::cout << data << endl;
+    std::cout << data << endl << endl;
     iss.clear();
     iss.str(data);
     assert(spreadsheet.load(iss));
@@ -144,19 +144,22 @@ void generateTableWithCycles() {
 
 void runTests() {
     srand(time(nullptr));
-
+    posTest();
+    cellTest();
+    basicTests();
 #ifdef SIMPLE_TESTS
     CSpreadsheet preTests;
-    preTests.setCell(CPos("d1"), "=12+10 + $E$1");
+    assert(preTests.setCell(CPos("d1"), "=12+10 + $E$1"));
     assert(valueMatch(preTests.getValue(CPos("d1")), CValue()));
-    preTests.setCell(CPos("e1"), "=-12-10");
-    preTests.setCell(CPos("f1"), "=$d1 + E$1");
-    assert(valueMatch(preTests.getValue(CPos("d1")), CValue(0.)));
+    assert(preTests.setCell(CPos("e1"), "=-12-10"));
+    assert(preTests.setCell(CPos("f1"), "=$d1 + E$1"));
+    CValue res = preTests.getValue(CPos("d1"));
+    assert(valueMatch(res, CValue(0.)));
     assert(valueMatch(preTests.getValue(CPos("f1")), CValue(-22.)));
     setCellRange({"d2", "d3", "d4", "d5", "g1", "h1", "h1"}, {"1", "2", "3", "4", "1", "=2", "=3", "=4"}, preTests);
     copyRectRange({{"g2", "f1"}, {"g3", "g2"}, {"g4", "f1"}, {"g5", "f1"}}, 1, 1, preTests);
-
-    assert(valueMatch(preTests.getValue(CPos("g2")), CValue(-21.)));
+    res = preTests.getValue(CPos("g2"));
+    assert(valueMatch(res, CValue(-21.)));
     assert(valueMatch(preTests.getValue(CPos("g3")), CValue(-20.)));
     assert(valueMatch(preTests.getValue(CPos("g4")), CValue(-19.)));
     assert(valueMatch(preTests.getValue(CPos("g5")), CValue(-18.)));
@@ -186,9 +189,11 @@ void runTests() {
     assert(valueMatch(preTests.getValue(CPos("i5")), CValue(7.)));
 
     assert(valueMatch(preTests.getValue(CPos("f1")), CValue(-22.)));
+    res = preTests.getValue(CPos("g2"));
 
     preTests.copyRect(CPos("h3"), CPos("g2"), 4, 4);
-
+    res = preTests.getValue(CPos("h3"));
+    assert(valueMatch(res, CValue(3.)));
     assert(valueMatch(preTests.getValue(CPos("h6")), CValue()));
     assert(valueMatch(preTests.getValue(CPos("i6")), CValue()));
     assert(valueMatch(preTests.getValue(CPos("h6")), CValue()));
@@ -200,7 +205,8 @@ void runTests() {
     saveLoad(preTests);
 
     assert(valueMatch(preTests.getValue(CPos("h2")), CValue(2.)));
-    assert(valueMatch(preTests.getValue(CPos("h3")), CValue(3.)));
+    res = preTests.getValue(CPos("h3"));
+    assert(valueMatch(res, CValue(3.)));
     assert(valueMatch(preTests.getValue(CPos("h4")), CValue(4.)));
     assert(valueMatch(preTests.getValue(CPos("h5")), CValue(5.)));
 
@@ -300,7 +306,11 @@ void runTests() {
             std::swap(copy[j], copy[i]);
             iss.clear();
             iss.str(copy);
-            assert(fileIo.load(iss) == (copy==data));
+            bool resb = fileIo.load(iss) == (copy == data);
+            if (!resb) {
+                cout << "failed:" << endl << copy << endl << endl << data;
+            }
+            assert(resb);
         }
     }
 
@@ -372,7 +382,7 @@ void cellTest() {
     res = s.getValue(CPos("PROG1"));
     cout << get<double>(res) << endl;
 
-    CSpreadsheet l,m;
+    CSpreadsheet l, m;
     l.setCell(CPos("A4"), "TEST");
     l.setCell(CPos("A2"), "dTEST");
     std::ostringstream oss;
@@ -527,7 +537,8 @@ void basicTests() {
     assert(x0 . setCell ( CPos ( "B5" ), "=B1+B2+B3+B4" ));
     assert(x0 . setCell ( CPos ( "B6" ), "=B1+B2+B3+B4+B5" ));
     assert(valueMatch ( x0 . getValue ( CPos ( "B1" ) ), CValue ( 625.0 ) ));
-    assert(valueMatch ( x0 . getValue ( CPos ( "B2" ) ), CValue ( -110.25 ) ));
+    CValue res = x0.getValue(CPos("B2"));
+    assert(valueMatch ( res, CValue ( -110.25 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "B3" ) ), CValue ( 1024.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "B4" ) ), CValue ( 930.25 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "B5" ) ), CValue ( 2469.0 ) ));
@@ -579,6 +590,7 @@ void basicTests() {
     assert(valueMatch ( x0 . getValue ( CPos ( "F13" ) ), CValue ( 15.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "F14" ) ), CValue() ));
     assert(valueMatch ( x0 . getValue ( CPos ( "G10" ) ), CValue() ));
+    res = x0.getValue(CPos("G11"));
     assert(valueMatch ( x0 . getValue ( CPos ( "G11" ) ), CValue ( 75.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "G12" ) ), CValue ( 25.0 ) ));
     assert(valueMatch ( x0 . getValue ( CPos ( "G13" ) ), CValue ( 65.0 ) ));
@@ -635,5 +647,6 @@ void basicTests() {
     iss.clear();
     iss.str(data);
     assert(! x1 . load ( iss ));
+    cout << "Basic prog tests passed" << endl;
 }
 #endif

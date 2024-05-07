@@ -1,11 +1,10 @@
 #ifndef CCELL_H
 #define CCELL_H
 #include "../header.h"
-#include "CPos.h"
-#include "CASTNode.h"
 
-class CCell;
-using CPosRefArr = std::vector<std::pair<CPos, CCell *> >;
+#include "./AST/AASTNode.h"
+#include "CRefManager.h"
+#include "AST/CASTNodePtr.h"
 
 /**
  *
@@ -30,18 +29,14 @@ public:
 
     CCell &operator=(CCell other);
 
-    CSharedVal getValue(size_t setRun, size_t eraseRun, std::map<CPos, CCell> &map);
-
-    void moveReferences(size_t x, size_t y);
+    CSharedVal getValue(size_t run);
 
 private:
-    std::string m_str;
     CSharedVal m_computedValue;
     size_t m_valueValidAt;
-    size_t m_ptrCacheValidAt;
+    CRefManager m_refManager;
     ECellState m_state;
-    std::unique_ptr<CASTNode> m_root;
-    CPosRefArr m_references;
+    CASTNodePtr m_root;
 
     void saveVal(const CSharedVal &val);
 };
