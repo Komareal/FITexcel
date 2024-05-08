@@ -12,6 +12,7 @@
 class CPos {
 public:
     friend class CSpreadsheet;
+    friend class CPosHash;
 
     // ------------ Constructors
     CPos(std::string_view str, bool ignoreFix = true);
@@ -107,4 +108,7 @@ private:
     void parseY(const std::string_view &str, size_t &index, bool ignore_col, bool ignoreFix);
 };
 
+struct CPosHash {
+    size_t operator()(const CPos &pos) const;
+};
 #endif //CPOS_H

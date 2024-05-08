@@ -6,7 +6,7 @@
 #include "test.h"
 
 int main() {
-    // runTests();
+    runTests();
     return EXIT_SUCCESS;
 }
 #endif /* __PROGTEST__ */

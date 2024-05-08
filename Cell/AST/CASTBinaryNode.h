@@ -35,6 +35,8 @@ public:
 
     void addChild(const CASTNodePtr &child);
 
+    bool hasValChildern() const;
+
 private:
     CASTNodePtr m_childern[2];
     size_t m_chSize;

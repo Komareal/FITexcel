@@ -112,19 +112,30 @@ void CBuilder::makeBinOp(CSharedVal (*op_fnc)(const CSharedVal &, const CSharedV
     node.addChild(m_stack.top());
     m_stack.pop();
 
+    if (node.hasValChildern()) {
+        const CSharedVal sharedRes = node.computeVal(m_refManager);
+        m_stack.emplace(std::make_shared<CASTValNode>(sharedRes == nullptr ? CValue() : *sharedRes));
+        return;
+    }
     m_stack.emplace(std::make_shared<CASTBinaryNode>(std::move(node)));
 }
 
 void CBuilder::makeUnOp(CSharedVal (*op_fnc)(const CSharedVal &), CASTUnaryNode::EUnaryType type) {
     if (m_stack.size() < 1)
         throw std::out_of_range("When creating unary operation none value is left");
-    CASTNodePtr tmp = CASTNodePtr(
-        std::make_shared<CASTUnaryNode>(
-            std::move(m_stack.top()),
-            op_fnc,
-            type
-        )
-    );
+    CASTUnaryNode tmp = {
+        std::move(m_stack.top()),
+        op_fnc,
+        type
+    };
+
     m_stack.pop();
-    m_stack.emplace(tmp);
+
+    if (tmp.hasValChild()) {
+        const CSharedVal sharedRes = tmp.computeVal(m_refManager);
+        m_stack.emplace(std::make_shared<CASTValNode>(sharedRes == nullptr ? CValue() : *sharedRes));
+        return;
+    }
+
+    m_stack.emplace(std::make_shared<CASTUnaryNode>(tmp));
 }

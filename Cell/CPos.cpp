@@ -98,7 +98,6 @@ CPos CPos::relativeMove(const size_t offsetX, const size_t offsetY) const {
 
 
 void CPos::print(std::ostream &os) const {
-    os << " ";
     if (m_fixX) {
         os << "$";
     }
@@ -119,7 +118,6 @@ void CPos::print(std::ostream &os) const {
     }
 
     os << m_y;
-    os << " ";
 }
 
 // ------------ Copy and move
@@ -166,4 +164,9 @@ bool operator>=(const CPos &lhs, const CPos &rhs) {
 
 bool operator<=(const CPos &lhs, const CPos &rhs) {
     return rhs >= lhs;
+}
+
+size_t CPosHash::operator()(const CPos &pos) const {
+    constexpr std::hash<size_t> hasher;
+    return hasher(pos.m_x) ^ hasher(pos.m_y);
 }

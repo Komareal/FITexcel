@@ -363,6 +363,7 @@ void cellTest() {
     s.setCell(CPos("b6"), "=B1 < 20 ");
     s.setCell(CPos("c1"), "=c2 ");
     s.setCell(CPos("c2"), "=c1 ");
+    saveLoad(s);
     assert(valueMatch ( s . getValue ( CPos ( "B1" ) ), CValue ( 20.0 ) ));
     assert(valueMatch ( s . getValue ( CPos ( "B2" ) ), CValue ( 1.0 ) ));
     assert(valueMatch ( s . getValue ( CPos ( "B3" ) ), CValue ( 1.0 ) ));

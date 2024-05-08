@@ -1,11 +1,4 @@
-//
-// Created by ales on 5/6/24.
-//
-
 #include "CASTOperations.h"
-
-#include <memory>
-#include <memory>
 
 CSharedVal CASTOperations::add(const CSharedVal &first, const CSharedVal &second) {
     if (assumeDoubles(first, second))

@@ -48,7 +48,7 @@ public:
                   int h = 1);
 
 private:
-    std::map<CPos, CCell> m_sheet;
+    std::unordered_map<CPos, CCell, CPosHash> m_sheet;
     size_t m_setRun;
     size_t m_eraseRun;
 };

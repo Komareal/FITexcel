@@ -18,11 +18,13 @@ public:
 
     CASTUnaryNode &operator=(CASTUnaryNode other);
 
-private:
+    bool hasValChild() const;
+
     void print(std::stringstream &ss, const CRefManager &refManager) const override;
 
     CSharedVal computeVal(CRefManager &refManager) const override;
 
+private:
     CASTNodePtr m_child;
 
     EUnaryType m_type;

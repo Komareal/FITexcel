@@ -26,6 +26,10 @@ CASTUnaryNode &CASTUnaryNode::operator=(CASTUnaryNode other) {
     return *this;
 }
 
+bool CASTUnaryNode::hasValChild() const {
+    return m_child.m_ptr->isVal();
+}
+
 void CASTUnaryNode::print(std::stringstream &ss, const CRefManager &refManager) const {
     ss << " ( ";
     switch (m_type) {

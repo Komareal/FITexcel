@@ -80,9 +80,12 @@ bool CSpreadsheet::save(std::ostream &os) const {
         stringstream tmp;
         cell.m_root.m_ptr->print(tmp, cell.m_refManager);
 
-        ss << hex << pos.m_x << sep << pos.m_y << sep << tmp.str().length() << sep;
+        size_t len = tmp.str().length();
         if (!cell.m_root.m_ptr->isVal())
-            ss << "=";
+            len += 2;
+        ss << hex << pos.m_x << sep << pos.m_y << sep << len << sep;
+        if (!cell.m_root.m_ptr->isVal())
+            ss << "= ";
         ss << tmp.str() << endl;
     }
 
@@ -96,29 +99,21 @@ bool CSpreadsheet::save(std::ostream &os) const {
 }
 
 bool CSpreadsheet::setCell(const CPos &pos, const std::string &contents) {
-    m_setRun++;
-    const auto it = m_sheet.lower_bound(pos);
     try {
-        if (it != m_sheet.end() && it->first == pos) {
-            it->second = CCell(contents);
-        } else {
-            m_sheet.emplace_hint(it, pos, contents);
-        }
+        return setCell(pos, CCell(contents));
     } catch (...) {
-        m_setRun--;
         return false;
     }
-    return true;
 }
 
 bool CSpreadsheet::setCell(const CPos &pos, const CCell &cell) {
     m_setRun++;
-    const auto it = m_sheet.lower_bound(pos);
+    const auto it = m_sheet.find(pos);
     try {
         if (it != m_sheet.end() && it->first == pos) {
             it->second = cell;
         } else {
-            m_sheet.emplace_hint(it, pos, cell);
+            m_sheet.emplace(pos, cell);
         }
     } catch (...) {
         return false;
@@ -129,7 +124,7 @@ bool CSpreadsheet::setCell(const CPos &pos, const CCell &cell) {
 bool CSpreadsheet::eraseCell(const CPos &pos) {
     m_setRun++;
     m_eraseRun++;
-    const auto it = m_sheet.lower_bound(pos);
+    const auto it = m_sheet.find(pos);
     if (it != m_sheet.end() && it->first == pos) {
         m_sheet.erase(it);
         return true;
@@ -138,7 +133,7 @@ bool CSpreadsheet::eraseCell(const CPos &pos) {
 }
 
 CValue CSpreadsheet::getValue(const CPos &pos) {
-    const auto it = m_sheet.lower_bound(pos);
+    const auto it = m_sheet.find(pos);
     if (it == m_sheet.end() || it->first != pos)
         return {};
     const CSharedVal res = getValue(&it->second);
@@ -158,14 +153,14 @@ CSharedVal CSpreadsheet::getValue(CCell *cell) {
 }
 
 void CSpreadsheet::copyRect(const CPos &dst, const CPos &src, const int w, const int h) {
-    std::map<CPos, CCell> tmp;
+    std::unordered_map<CPos, CCell, CPosHash> tmp;
     const size_t xOffset = dst.m_x - src.m_x;
     const size_t yOffset = dst.m_y - src.m_y;
 
     for (size_t x = 0; x < static_cast<size_t>(w); x++) {
         for (size_t y = 0; y < static_cast<size_t>(h); y++) {
             auto tmpDst = src.relativeMove(x, y);
-            const auto it = m_sheet.lower_bound(tmpDst);
+            const auto it = m_sheet.find(tmpDst);
             if (it == m_sheet.end() || it->first != tmpDst)
                 continue;
             tmp.emplace(*it);
