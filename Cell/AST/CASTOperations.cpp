@@ -142,9 +142,9 @@ double CASTOperations::convertBoolToDouble(const bool x) {
 }
 
 CSharedVal CASTOperations::negateBool(const CSharedVal &val) {
-    const CSharedVal res = std::make_shared<CValue>(*val);
-    if (res == nullptr)
+    if (val == nullptr)
         return nullptr;
+    const CSharedVal res = std::make_shared<CValue>(*val);
     *res = convertBoolToDouble(std::get<double>(*res) == 0);
     return res;
 }

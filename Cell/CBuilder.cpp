@@ -47,7 +47,7 @@ void CBuilder::opEq() {
 }
 
 void CBuilder::opNe() {
-    makeBinOp(&CASTOperations::div, CASTBinaryNode::EBinaryType::NE);
+    makeBinOp(&CASTOperations::ne, CASTBinaryNode::EBinaryType::NE);
 }
 
 void CBuilder::opLt() {

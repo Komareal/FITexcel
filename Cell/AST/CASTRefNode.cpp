@@ -1,5 +1,5 @@
 #include "CASTRefNode.h"
-
+#include "../CRefManager.h"
 CASTRefNode::CASTRefNode(const size_t ref): m_ref(ref) {
 }
 

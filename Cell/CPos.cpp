@@ -48,7 +48,7 @@ size_t CPos::parseBase(const std::string_view &src, const char base, const char 
         throw std::invalid_argument("ParseBase: Base/zero character combination, overflows char");
 
     if (index >= src.length())
-        throw std::out_of_range("ParseBase: Index out of range");
+        throw std::invalid_argument("ParseBase: Index out of range");
 
     // Unless we hit out of range number, iterate through the string
     // In each iteration multiply res by base and add current char converted to base 2

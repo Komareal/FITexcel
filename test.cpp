@@ -396,6 +396,110 @@ void cellTest() {
     iss.clear();
     iss.str(data);
     assert(m . load ( iss ));
+    cout << ("efg"s > "ABC"s) << endl;
+    CSpreadsheet x;
+    assert(x.setCell(CPos("A0"), "ABC"));
+    assert(x.setCell(CPos("A1"), "efg"));
+    assert(x.setCell(CPos("A2"), "efg"));
+    assert(x.setCell(CPos("B0"), "10"));
+    assert(x.setCell(CPos("B1"), "20"));
+    assert(x.setCell(CPos("B2"), "20"));
+    assert(x.setCell(CPos("C0"), "= a0 + a1"));
+    assert(x.setCell(CPos("C1"), "= b0 + b1"));
+    assert(x.setCell(CPos("C2"), "= a0 + ((a1 + b0) + b1) "));
+    assert(x.setCell(CPos("D0"), "= 10 / 0 "));
+    assert(x.setCell(CPos("E1"), "= A0 - A1 "));
+    assert(x.setCell(CPos("E2"), "= A0 * A1 "));
+    assert(x.setCell(CPos("E3"), "= A0 ^ A1 "));
+
+    assert(x.setCell(CPos("F0"), "= A0 > A1 "));
+    assert(x.setCell(CPos("F1"), "= A0 < A1 "));
+    assert(x.setCell(CPos("F2"), "= A0 <= A1 "));
+    assert(x.setCell(CPos("F3"), "= A0 >= A1 "));
+    assert(x.setCell(CPos("F4"), "= A0 = A1 "));
+    assert(x.setCell(CPos("F5"), "= A0 <> A1 "));
+
+    assert(x.setCell(CPos("g0"), "= B0 > B1 "));
+    assert(x.setCell(CPos("g1"), "= B0 < B1 "));
+    assert(x.setCell(CPos("g2"), "= B0 <= B1 "));
+    assert(x.setCell(CPos("g3"), "= B0 >= B1 "));
+    assert(x.setCell(CPos("g4"), "= B0 = B1 "));
+    assert(x.setCell(CPos("g5"), "= B0 <> B1 "));
+
+    assert(x.setCell(CPos("h0"), "= B2 > B1 "));
+    assert(x.setCell(CPos("h1"), "= B2 < B1 "));
+    assert(x.setCell(CPos("h2"), "= B2 <= B1 "));
+    assert(x.setCell(CPos("h3"), "= B2 >= B1 "));
+    assert(x.setCell(CPos("h4"), "= B2 = B1 "));
+    assert(x.setCell(CPos("h5"), "= B2 <> B1 "));
+
+    assert(x.setCell(CPos("i0"), "= A2 > A1 "));
+    assert(x.setCell(CPos("i1"), "= A2 < A1 "));
+    assert(x.setCell(CPos("i2"), "= A2 <= A1 "));
+    assert(x.setCell(CPos("i3"), "= A2 >= A1 "));
+    assert(x.setCell(CPos("i4"), "= A2 = A1 "));
+    assert(x.setCell(CPos("i5"), "= A2 <> A1 "));
+
+
+
+    assert(x.setCell(CPos("j0"), "= A2 > B1 "));
+    assert(x.setCell(CPos("j1"), "= A2 < B1 "));
+    assert(x.setCell(CPos("j2"), "= A2 <= B1 "));
+    assert(x.setCell(CPos("j3"), "= A2 >= B1 "));
+    assert(x.setCell(CPos("j4"), "= A2 = B1 "));
+    assert(x.setCell(CPos("j5"), "= A2 <> B1 "));
+
+
+    assert(valueMatch(x.getValue(CPos("d0")), CValue()));
+    assert(valueMatch(x.getValue(CPos("e1")), CValue()));
+    assert(valueMatch(x.getValue(CPos("e2")), CValue()));
+    assert(valueMatch(x.getValue(CPos("e3")), CValue()));
+
+
+
+    assert(valueMatch(x.getValue(CPos("f0")), CValue(0.0)));
+    assert(valueMatch(x.getValue(CPos("f1")), CValue(1.0)));
+    assert(valueMatch(x.getValue(CPos("f2")), CValue(1.0)));
+    assert(valueMatch(x.getValue(CPos("f3")), CValue(0.0)));
+    assert(valueMatch(x.getValue(CPos("f4")), CValue(0.0)));
+    assert(valueMatch(x.getValue(CPos("f5")), CValue(1.0)));
+
+    assert(valueMatch(x.getValue(CPos("g0")), CValue(0.0)));
+    assert(valueMatch(x.getValue(CPos("g1")), CValue(1.0)));
+    assert(valueMatch(x.getValue(CPos("g2")), CValue(1.0)));
+    assert(valueMatch(x.getValue(CPos("g3")), CValue(0.0)));
+    assert(valueMatch(x.getValue(CPos("g4")), CValue(0.0)));
+    assert(valueMatch(x.getValue(CPos("g5")), CValue(1.0)));
+
+    assert(valueMatch(x.getValue(CPos("h0")), CValue(0.0)));
+    assert(valueMatch(x.getValue(CPos("h1")), CValue(0.0)));
+    assert(valueMatch(x.getValue(CPos("h2")), CValue(1.0)));
+    assert(valueMatch(x.getValue(CPos("h3")), CValue(1.0)));
+    assert(valueMatch(x.getValue(CPos("h4")), CValue(1.0)));
+    assert(valueMatch(x.getValue(CPos("h5")), CValue(0.0)));
+
+
+    assert(valueMatch(x.getValue(CPos("i0")), CValue(0.0)));
+    assert(valueMatch(x.getValue(CPos("i1")), CValue(0.0)));
+    assert(valueMatch(x.getValue(CPos("i2")), CValue(1.0)));
+    assert(valueMatch(x.getValue(CPos("i3")), CValue(1.0)));
+    assert(valueMatch(x.getValue(CPos("i4")), CValue(1.0)));
+    assert(valueMatch(x.getValue(CPos("i5")), CValue(0.0)));
+
+    assert(valueMatch(x.getValue(CPos("j0")), CValue()));
+    assert(valueMatch(x.getValue(CPos("j1")), CValue()));
+    assert(valueMatch(x.getValue(CPos("j2")), CValue()));
+    assert(valueMatch(x.getValue(CPos("j3")), CValue()));
+    assert(valueMatch(x.getValue(CPos("j4")), CValue()));
+    assert(valueMatch(x.getValue(CPos("j5")), CValue()));
+
+    res = x.getValue(CPos("c0"));
+    assert(valueMatch ( res, CValue ( "ABCefg" ) ));
+    res = x.getValue(CPos("c1"));
+    assert(valueMatch ( res, CValue ( 30.0 ) ));
+    cout << std::to_string(10.0) << endl;
+    res = x.getValue(CPos("c2"));
+    assert(valueMatch ( res, CValue ( "ABCefg10.00000020.000000" ) ));
 
     cout << "cellTest OK" << std::endl;
 }
@@ -455,6 +559,48 @@ void posTest() {
         exc = true;
     }
     assert(exc);
+    try {
+        y = {" AB01"};
+    } catch (const std::invalid_argument &) {
+        exc = true;
+    }
+    assert(exc);
+    try {
+        y = {""};
+    } catch (const std::invalid_argument &) {
+        exc = true;
+    }
+    assert(exc);
+    try {
+        y = {" AB 01"};
+    } catch (const std::invalid_argument &) {
+        exc = true;
+    }
+    assert(exc);
+    try {
+        y = {"AB01 "};
+    } catch (const std::invalid_argument &) {
+        exc = true;
+    }
+    assert(exc);
+    try {
+        y = {"$A0"};
+    } catch (const std::invalid_argument &) {
+        exc = true;
+    }
+    assert(exc);
+    try {
+        y = {"A$0"};
+    } catch (const std::invalid_argument &) {
+        exc = true;
+    }
+    assert(exc);
+    try {
+        y = {"$A$0"};
+    } catch (const std::invalid_argument &) {
+        exc = true;
+    }
+    assert(exc);
     exc = false;
     try {
         y = {"GKGWBYLWRXTLPP0"};
@@ -504,6 +650,11 @@ void posTest() {
     y = {"B10", false};
     y = y.relativeMove(-1, -10);
     assert(y == CPos("A0", false));
+    y = {"Z0"};
+    y = {"A0"};
+    y = {"z0"};
+    y = {"a0"};
+    assert(CPos("AZ0") == CPos("az0"));
 
     std::cout << "posTest OK" << std::endl;
 }

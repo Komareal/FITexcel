@@ -1,9 +1,9 @@
 #ifndef AASTNode_H
 #define AASTNode_H
-#include "../CRefManager.h"
 #include "../../header.h"
 
 
+class CRefManager;
 class CCell;
 class CPos;
 

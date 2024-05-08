@@ -61,7 +61,7 @@ void CASTBinaryNode::print(std::stringstream &ss, const CRefManager &refManager)
             ss << "=";
             break;
         case EBinaryType::NE:
-            ss << "!=";
+            ss << "<>";
             break;
         case EBinaryType::LT:
             ss << "<";

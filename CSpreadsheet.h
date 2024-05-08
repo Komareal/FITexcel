@@ -17,7 +17,7 @@ public:
     friend class CRefManager;
 
     static unsigned capabilities() {
-        return SPREADSHEET_CYCLIC_DEPS | SPREADSHEET_FILE_IO | SPREADSHEET_SPEED;
+        return SPREADSHEET_CYCLIC_DEPS | SPREADSHEET_SPEED | SPREADSHEET_FILE_IO;
     }
 
     CSpreadsheet();

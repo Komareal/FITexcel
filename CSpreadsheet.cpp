@@ -27,7 +27,7 @@ CSpreadsheet &CSpreadsheet::operator=(CSpreadsheet other) {
 
 bool CSpreadsheet::load(std::istream &is) {
     using namespace std;
-    string cellstr, whole, line;
+    string cellstr, whole;
     size_t controlHash;
     CSpreadsheet nexSheet;
 
@@ -45,7 +45,6 @@ bool CSpreadsheet::load(std::istream &is) {
     tmpis << is.rdbuf();
     whole = tmpis.str();
 
-    auto tmp = hasher(whole);
     if (hasher(whole) != controlHash)
         return false;
 
@@ -75,25 +74,23 @@ bool CSpreadsheet::load(std::istream &is) {
 bool CSpreadsheet::save(std::ostream &os) const {
     using namespace std;
     constexpr char sep = ' ';
-    ostringstream tmpos, hextmp;
-    tmpos << endl;
+    stringstream ss;
+    ss << endl;
     for (const auto &[pos, cell]: m_sheet) {
-        stringstream cellStr;
-        if (!cell.m_root.m_ptr->isVal())
-            cellStr << "=";
-        cell.m_root.m_ptr->print(cellStr, cell.m_refManager);
+        stringstream tmp;
+        cell.m_root.m_ptr->print(tmp, cell.m_refManager);
 
-        tmpos << hex << pos.m_x << sep << pos.m_y << sep << cellStr.str().length();
-        tmpos << dec << sep << cellStr.str() << endl;
+        ss << hex << pos.m_x << sep << pos.m_y << sep << tmp.str().length() << sep;
+        if (!cell.m_root.m_ptr->isVal())
+            ss << "=";
+        ss << tmp.str() << endl;
     }
 
     constexpr hash<std::string> hasher;
-    hextmp << hex << hasher(tmpos.str());
-    string hash = hextmp.str();
+    stringstream hashSs;
+    hashSs << setfill('0') << setw(16) << hex << hasher(ss.str());
 
-    hash.insert(0, max(0ul, 16 - hash.size()), '0');
-
-    os << hash << tmpos.str();
+    os << hashSs.str() << ss.str();
 
     return true;
 }
@@ -131,6 +128,7 @@ bool CSpreadsheet::setCell(const CPos &pos, const CCell &cell) {
 
 bool CSpreadsheet::eraseCell(const CPos &pos) {
     m_setRun++;
+    m_eraseRun++;
     const auto it = m_sheet.lower_bound(pos);
     if (it != m_sheet.end() && it->first == pos) {
         m_sheet.erase(it);
@@ -163,8 +161,6 @@ void CSpreadsheet::copyRect(const CPos &dst, const CPos &src, const int w, const
     std::map<CPos, CCell> tmp;
     const size_t xOffset = dst.m_x - src.m_x;
     const size_t yOffset = dst.m_y - src.m_y;
-    m_eraseRun++;
-    m_setRun++;
 
     for (size_t x = 0; x < static_cast<size_t>(w); x++) {
         for (size_t y = 0; y < static_cast<size_t>(h); y++) {
