@@ -54,6 +54,18 @@ CSharedVal CRefManager::getValOfReference(const size_t i) {
     return m_base->getValue(ptr);
 }
 
+CSharedVal CRefManager::getValOfReference(const CPos &pos) const {
+    const auto it = m_base->m_sheet.find(pos);
+    if (it == m_base->m_sheet.end())
+        return nullptr;
+    return m_base->getValue(&it->second);
+}
+
+CPos CRefManager::getPosOfReference(const size_t i) {
+    auto [pos, ptr] = m_references[i];
+    return pos;
+}
+
 void CRefManager::print(std::ostream &os, const size_t i) const {
     m_references[i].first.print(os);
 }

@@ -113,6 +113,51 @@ CSharedVal CASTOperations::le(const CSharedVal &first, const CSharedVal &second)
     return ge(second, first);
 }
 
+void CASTOperations::sum(CSharedVal &carry, const CSharedVal &val) {
+    if (val == nullptr || !std::holds_alternative<double>(*val))
+        return;
+
+    if (carry == nullptr) {
+        carry = std::make_shared<CValue>(*val);
+    } else if (std::holds_alternative<double>(*carry)) {
+        *carry = std::get<double>(*carry) + std::get<double>(*val);
+    }
+}
+
+void CASTOperations::cnt(const CSharedVal &carry, const CSharedVal &val) {
+    if (carry == nullptr || val == nullptr || !holds_alternative<double>(*carry))
+        return;
+    *carry = std::get<double>(*carry) + 1;
+}
+
+void CASTOperations::min(CSharedVal &carry, const CSharedVal &val) {
+    if (val == nullptr || !holds_alternative<double>(*val))
+        return;
+    if (carry == nullptr) {
+        carry = std::make_shared<CValue>(*val);
+    } else if (holds_alternative<double>(*carry)) {
+        *carry = std::min(std::get<double>(*carry), std::get<double>(*val));
+    }
+}
+
+void CASTOperations::max(CSharedVal &carry, const CSharedVal &val) {
+    if (val == nullptr || !holds_alternative<double>(*val))
+        return;
+    if (carry == nullptr) {
+        carry = std::make_shared<CValue>(*val);
+    } else if (holds_alternative<double>(*carry)) {
+        *carry = std::max(std::get<double>(*carry), std::get<double>(*val));
+    }
+}
+
+void CASTOperations::cntVal(const CSharedVal &carry, const CSharedVal &val, const CSharedVal &lookFor) {
+    if (carry == nullptr || val == nullptr || !holds_alternative<double>(*carry))
+        return;
+    if (!assumeDoubles(val, lookFor) && !assumeStrings(val, lookFor))
+        return;
+    if (std::get<double>(*val) == std::get<double>(*lookFor))
+        *carry = std::get<double>(*carry) + 1;
+}
 
 bool CASTOperations::assumeDoubles(const CSharedVal &first, const CSharedVal &second) {
     return holds_alternative<double>(*first) && holds_alternative<double>(*second);

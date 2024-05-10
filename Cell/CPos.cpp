@@ -35,7 +35,7 @@ void CPos::parseY(const std::string_view &str, size_t &index, const bool ignore_
     }
 
     m_y = parseBase(str, 10, '0', 0, index);
-    if (index != str.length() && (!ignore_col || str[index] == ':'))
+    if (index != str.length() && (!ignore_col || str[index] != ':'))
         throw std::invalid_argument("CPos: Invalid cell address");
 }
 
@@ -65,7 +65,7 @@ size_t CPos::parseBase(const std::string_view &src, const char base, const char 
         n = n - firstChar + firstNum;
 
 
-        if (n > firstChar + base)
+        if (n >= base + firstNum)
             return res;
 
         // check res overflow

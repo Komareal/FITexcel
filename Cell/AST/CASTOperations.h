@@ -29,6 +29,16 @@ public:
 
     static CSharedVal ge(const CSharedVal &first, const CSharedVal &second);
 
+    static void sum(CSharedVal &carry, const CSharedVal &val);
+
+    static void cnt(const CSharedVal &carry, const CSharedVal &val);
+
+    static void min(CSharedVal &carry, const CSharedVal &val);
+
+    static void max(CSharedVal &carry, const CSharedVal &val);
+
+    static void cntVal(const CSharedVal &carry, const CSharedVal &val, const CSharedVal &lookFor);
+
 private:
     static bool assumeDoubles(const CSharedVal &first, const CSharedVal &second);
 

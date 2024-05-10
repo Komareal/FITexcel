@@ -147,6 +147,7 @@ void runTests() {
     posTest();
     cellTest();
     basicTests();
+    funcTest();
 #ifdef SIMPLE_TESTS
     CSpreadsheet preTests;
     assert(preTests.setCell(CPos("d1"), "=12+10 + $E$1"));
@@ -442,7 +443,6 @@ void cellTest() {
     assert(x.setCell(CPos("i5"), "= A2 <> A1 "));
 
 
-
     assert(x.setCell(CPos("j0"), "= A2 > B1 "));
     assert(x.setCell(CPos("j1"), "= A2 < B1 "));
     assert(x.setCell(CPos("j2"), "= A2 <= B1 "));
@@ -455,7 +455,6 @@ void cellTest() {
     assert(valueMatch(x.getValue(CPos("e1")), CValue()));
     assert(valueMatch(x.getValue(CPos("e2")), CValue()));
     assert(valueMatch(x.getValue(CPos("e3")), CValue()));
-
 
 
     assert(valueMatch(x.getValue(CPos("f0")), CValue(0.0)));
@@ -658,6 +657,100 @@ void posTest() {
     assert(CPos("AZ0") == CPos("az0"));
 
     std::cout << "posTest OK" << std::endl;
+}
+
+void funcTest() {
+    CSpreadsheet s;
+    setCellRange({"a1", "a2", "a3", "b2", "b3"}, {"-2", "100", "=-100", "=0", "2"}, s);
+    setCellRange({"t1", "t2", "t3", "t4", "t5"}, {"=sum(A1:B3)", "=min(A1:B3)", "= max(A1:B3)", "= count(A1:B3)", "= countval(0, A1:B3)"}, s);
+
+    saveLoad(s);
+
+    assert(valueMatch(s.getValue(CPos("a1")), CValue(-2.)));
+    assert(valueMatch(s.getValue(CPos("a2")), CValue(100.)));
+    assert(valueMatch(s.getValue(CPos("a3")), CValue(-100.)));
+    assert(valueMatch(s.getValue(CPos("b2")), CValue(0.)));
+    assert(valueMatch(s.getValue(CPos("b3")), CValue(2.)));
+
+    assert(valueMatch(s.getValue(CPos("t1")), CValue(0.)));
+    assert(valueMatch(s.getValue(CPos("t2")), CValue(-100.)));
+    assert(valueMatch(s.getValue(CPos("t3")), CValue(100.)));
+    assert(valueMatch(s.getValue(CPos("t4")), CValue(5.)));
+    assert(valueMatch(s.getValue(CPos("t5")), CValue(1.))); {
+        CSpreadsheet xxx;
+        assert(xxx.setCell(CPos("A0"), "1"));
+        assert(xxx.setCell(CPos("A1"), "1"));
+        assert(xxx.setCell(CPos("A2"), "1"));
+        assert(xxx.setCell(CPos("A3"), "1"));
+        assert(xxx.setCell(CPos("A4"), "1"));
+
+        assert(xxx.setCell(CPos("B0"), "2"));
+        assert(xxx.setCell(CPos("B1"), "2"));
+        assert(xxx.setCell(CPos("B2"), "2"));
+        assert(xxx.setCell(CPos("B3"), "2"));
+        assert(xxx.setCell(CPos("B4"), "2"));
+
+        assert(xxx.setCell(CPos("C0"), "3"));
+        assert(xxx.setCell(CPos("C1"), "3"));
+        assert(xxx.setCell(CPos("C2"), "3"));
+        assert(xxx.setCell(CPos("C3"), "3"));
+        assert(xxx.setCell(CPos("C4"), "3"));
+
+        assert(xxx.setCell(CPos("D0"), "4"));
+        assert(xxx.setCell(CPos("D1"), "4"));
+        assert(xxx.setCell(CPos("D2"), "4"));
+        assert(xxx.setCell(CPos("D3"), "4"));
+        assert(xxx.setCell(CPos("D4"), "4"));
+
+        assert(xxx.setCell(CPos("E0"), "5"));
+        assert(xxx.setCell(CPos("E1"), "5"));
+        assert(xxx.setCell(CPos("E2"), "5"));
+        assert(xxx.setCell(CPos("E3"), "5"));
+        assert(xxx.setCell(CPos("E4"), "5"));
+
+        assert(xxx.setCell(CPos("F0"), "=sum(B2:D4)"));
+        assert(!xxx.setCell(CPos("F0"), "=Sum(B2:D4)"));
+        assert(!xxx.setCell(CPos("F0"), "=sum(B2)"));
+        assert(!xxx.setCell(CPos("F0"), "=sum(B2:D4"));
+        assert(!xxx.setCell(CPos("F0"), "=sum(B2:"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(27.0)));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(27.0)));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(27.0)));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(27.0)));
+        assert(xxx.setCell(CPos("D4"), "3"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(26.0)));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(26.0)));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(26.0)));
+        assert(xxx.setCell(CPos("D4"), "4"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(27.0)));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(27.0)));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(27.0)));
+        assert(xxx.setCell(CPos("F0"), "=sum(D4:B2)"));
+        // assert(valueMatch(xxx.getValue(CPos("F0")), CValue(27.0)));
+        assert(xxx.setCell(CPos("F0"), "=min(B2:D4)"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(2.0)));
+        assert(xxx.setCell(CPos("F0"), "=max(B2:D4)"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(4.0)));
+        assert(xxx.setCell(CPos("F0"), "=max(B2:D4)+min(B2:D4)"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(6.0)));
+        assert(xxx.setCell(CPos("F0"), "=count(B2:D4)"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(9.0)));
+        assert(xxx.setCell(CPos("F0"), "=countval(3, B2:D4)"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(3.0)));
+        assert(xxx.setCell(CPos("F0"), "=countval(\"3\", B2:D4)"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(0.0)));
+        assert(!xxx.setCell(CPos("F0"), "=countval(D2:B2, B2:D4)"));
+        assert(xxx.setCell(CPos("F0"), "=if(1, 2, 3)"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(2.0)));
+        assert(xxx.setCell(CPos("F0"), "=if(0, 2, 3)"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(3.0)));
+        assert(xxx.setCell(CPos("F0"), "=if(2, 2, 3)"));
+        assert(valueMatch(xxx.getValue(CPos("F0")), CValue(2.0)));
+        assert(!xxx.setCell(CPos("F0"), "=if(A2:A2, 2, 3)"));
+        assert(!xxx.setCell(CPos("F0"), "=if(A2:A2, A2:A2, 3)"));
+        assert(!xxx.setCell(CPos("F0"), "=if(A2:A2, A2:A2, A2:A2)"));
+        assert(!xxx.setCell(CPos("F0"), "=if(0, A2:A2, A2:A2)"));
+    }
 }
 
 #ifdef BASIC_TEST

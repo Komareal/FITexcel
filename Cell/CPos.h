@@ -11,9 +11,6 @@
  */
 class CPos {
 public:
-    friend class CSpreadsheet;
-    friend class CPosHash;
-
     // ------------ Constructors
     CPos(std::string_view str, bool ignoreFix = true);
 
@@ -22,6 +19,27 @@ public:
     CPos();
 
     CPos(size_t x, size_t y);
+
+    /**
+     * X coordinate
+     */
+    size_t m_x;
+
+    /**
+     * Y coordinate
+     */
+    size_t m_y;
+
+    /**
+     * X is relative or absolute (fixed) - setted with dollar sign in address like $A0
+     */
+    bool m_fixX;
+
+    /**
+     * Y is relative or absolute (fixed) - setted with dollar sign in address like A$0
+     */
+    bool m_fixY;
+
 
     // ------------ Utils
 
@@ -59,34 +77,14 @@ public:
 
 private:
     /**
-     * X coordinate
-     */
-    size_t m_x;
-
-    /**
-     * Y coordinate
-     */
-    size_t m_y;
-
-    /**
-     * X is relative or absolute (fixed) - setted with dollar sign in address like $A0
-     */
-    bool m_fixX;
-
-    /**
-     * Y is relative or absolute (fixed) - setted with dollar sign in address like A$0
-     */
-    bool m_fixY;
-
-    /**
-     * Parses string to size_t until it hits end or char out of base range (for this application assumes case insensitive)
-     * @param src tring containing the address
-     * @param base to convert to
-     * @param firstChar which char to take as 0
-     * @param firstNum decides what first char means. Just because of that "AA" could be 27 ('A' == 1)
-     * @param index - from where to start and where it ends
-     * @return
-     */
+    * Parses string to size_t until it hits end or char out of base range (for this application assumes case insensitive)
+    * @param src tring containing the address
+    * @param base to convert to
+    * @param firstChar which char to take as 0
+    * @param firstNum decides what first char means. Just because of that "AA" could be 27 ('A' == 1)
+    * @param index - from where to start and where it ends
+    * @return
+    */
     static size_t parseBase(const std::string_view &src, char base, char firstChar, int firstNum, size_t &index);
 
 

@@ -55,7 +55,7 @@ private:
     std::stack<CASTNodePtr> m_stack;
     CRefManager &m_refManager;
 
-    void makeBinOp(CSharedVal (*op_fnc)(const CSharedVal &, const CSharedVal &), CASTBinaryNode::EBinaryType type);
+    void makeBinOp(CSharedVal (*op_fnc)(const CSharedVal &, const CSharedVal &), EBinaryType type);
 
     void makeUnOp(CSharedVal (*op_fnc)(const CSharedVal &), CASTUnaryNode::EUnaryType type);
 };

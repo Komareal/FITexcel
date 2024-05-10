@@ -2,9 +2,11 @@
 
 #include "AST/CASTBinaryNode.h"
 #include "AST/CASTOperations.h"
+#include "AST/CASTRangeNode.h"
 #include "AST/CASTRefNode.h"
 #include "AST/CASTUnaryNode.h"
 #include "AST/CASTValNode.h"
+#include "AST/CASTFuncNode.h"
 
 
 CBuilder::CBuilder(CRefManager &m_ref_manager)
@@ -19,23 +21,23 @@ CASTNodePtr CBuilder::getRoot() {
 
 
 void CBuilder::opAdd() {
-    makeBinOp(&CASTOperations::add, CASTBinaryNode::EBinaryType::ADD);
+    makeBinOp(&CASTOperations::add, EBinaryType::ADD);
 }
 
 void CBuilder::opSub() {
-    makeBinOp(&CASTOperations::sub, CASTBinaryNode::EBinaryType::SUB);
+    makeBinOp(&CASTOperations::sub, EBinaryType::SUB);
 }
 
 void CBuilder::opMul() {
-    makeBinOp(&CASTOperations::mul, CASTBinaryNode::EBinaryType::MUL);
+    makeBinOp(&CASTOperations::mul, EBinaryType::MUL);
 }
 
 void CBuilder::opDiv() {
-    makeBinOp(&CASTOperations::div, CASTBinaryNode::EBinaryType::DIV);
+    makeBinOp(&CASTOperations::div, EBinaryType::DIV);
 }
 
 void CBuilder::opPow() {
-    makeBinOp(&CASTOperations::pow, CASTBinaryNode::EBinaryType::POW);
+    makeBinOp(&CASTOperations::pow, EBinaryType::POW);
 }
 
 void CBuilder::opNeg() {
@@ -43,27 +45,27 @@ void CBuilder::opNeg() {
 }
 
 void CBuilder::opEq() {
-    makeBinOp(&CASTOperations::eq, CASTBinaryNode::EBinaryType::EQ);
+    makeBinOp(&CASTOperations::eq, EBinaryType::EQ);
 }
 
 void CBuilder::opNe() {
-    makeBinOp(&CASTOperations::ne, CASTBinaryNode::EBinaryType::NE);
+    makeBinOp(&CASTOperations::ne, EBinaryType::NE);
 }
 
 void CBuilder::opLt() {
-    makeBinOp(&CASTOperations::lt, CASTBinaryNode::EBinaryType::LT);
+    makeBinOp(&CASTOperations::lt, EBinaryType::LT);
 }
 
 void CBuilder::opLe() {
-    makeBinOp(&CASTOperations::le, CASTBinaryNode::EBinaryType::LE);
+    makeBinOp(&CASTOperations::le, EBinaryType::LE);
 }
 
 void CBuilder::opGt() {
-    makeBinOp(&CASTOperations::gt, CASTBinaryNode::EBinaryType::GT);
+    makeBinOp(&CASTOperations::gt, EBinaryType::GT);
 }
 
 void CBuilder::opGe() {
-    makeBinOp(&CASTOperations::ge, CASTBinaryNode::EBinaryType::GE);
+    makeBinOp(&CASTOperations::ge, EBinaryType::GE);
 }
 
 void CBuilder::valNumber(double val) {
@@ -84,25 +86,33 @@ void CBuilder::valReference(const std::string val) {
 }
 
 void CBuilder::valRange(const std::string val) {
-    // size_t index = 0;
-    // const CPos from(val, true, index);
-    // const CPos to(val, true, ++index);
-    // m_stack.emplace(
-    //     std::pair(
-    //         emplaceRef(from),
-    //         emplaceRef(to)
-    //     )
-    // );
+    size_t index = 0;
+    const CPos from(val, true, index);
+    const CPos to(val, true, ++index);
+    m_stack.emplace(
+        std::make_shared<CASTRangeNode>(
+            m_refManager.addReference(from),
+            m_refManager.addReference(to)
+        )
+    );
 }
 
 void CBuilder::funcCall(const std::string fnName, const int paramCount) {
-    // // Just so compiler shuts up
-    // if (fnName == "sum")
-    //     if (paramCount == 0)
-    //         m_stack.emplace(EFuncType::SUM);
+    if (m_stack.size() < paramCount)
+        throw std::out_of_range("When creating function call not enough values are left");
+
+    std::vector<CASTNodePtr> children;
+    for (int i = 0; i < paramCount; i++) {
+        children.push_back(m_stack.top());
+        m_stack.pop();
+    }
+    auto node = CASTFuncNode(
+        fnName, children
+    );
+    m_stack.emplace(std::make_shared<CASTFuncNode>(node));
 }
 
-void CBuilder::makeBinOp(CSharedVal (*op_fnc)(const CSharedVal &, const CSharedVal &), const CASTBinaryNode::EBinaryType type) {
+void CBuilder::makeBinOp(CSharedVal (*op_fnc)(const CSharedVal &, const CSharedVal &), const EBinaryType type) {
     CASTBinaryNode node(op_fnc, type);
     if (m_stack.size() < 2)
         throw std::out_of_range("When creating binary operation not enough values are left");
@@ -120,7 +130,7 @@ void CBuilder::makeBinOp(CSharedVal (*op_fnc)(const CSharedVal &, const CSharedV
     m_stack.emplace(std::make_shared<CASTBinaryNode>(std::move(node)));
 }
 
-void CBuilder::makeUnOp(CSharedVal (*op_fnc)(const CSharedVal &), CASTUnaryNode::EUnaryType type) {
+void CBuilder::makeUnOp(CSharedVal (*op_fnc)(const CSharedVal &), const CASTUnaryNode::EUnaryType type) {
     if (m_stack.size() < 1)
         throw std::out_of_range("When creating unary operation none value is left");
     CASTUnaryNode tmp = {

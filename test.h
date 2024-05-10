@@ -8,6 +8,7 @@
 void cellTest();
 void runTests();
 void posTest();
+void funcTest();
 #ifdef BASIC_TEST
 void basicTests();
 #endif

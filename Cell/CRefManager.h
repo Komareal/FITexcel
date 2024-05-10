@@ -23,6 +23,10 @@ public:
 
     CSharedVal getValOfReference(size_t i);
 
+    CSharedVal getValOfReference(const CPos &pos) const;
+
+    CPos getPosOfReference(size_t i);
+
     void print(std::ostream &os, size_t i) const;
 
     void moveReferences(size_t x, size_t y);

@@ -1,7 +1,7 @@
 #ifndef AASTNode_H
 #define AASTNode_H
 #include "../../header.h"
-
+#include "../CPosRangeIterator.h"
 
 class CRefManager;
 class CCell;
@@ -19,6 +19,10 @@ public:
 
     virtual bool isVal() const {
         return false;
+    };
+
+    virtual std::optional<CPosRangeIterator> getRangeIterator(CRefManager &refManager) const {
+        return std::nullopt;
     };
 };
 

@@ -1,5 +1,7 @@
 #include "CSpreadsheet.h"
 
+#include "Cell/CPosRangeIterator.h"
+
 
 CSpreadsheet::CSpreadsheet(): m_setRun(0), m_eraseRun(0) {
 }
@@ -101,13 +103,14 @@ bool CSpreadsheet::save(std::ostream &os) const {
 bool CSpreadsheet::setCell(const CPos &pos, const std::string &contents) {
     try {
         return setCell(pos, CCell(contents));
-    } catch (...) {
+    } catch (std::invalid_argument &e) {
+        // print error
+        std::cout << e.what() << std::endl;
         return false;
     }
 }
 
 bool CSpreadsheet::setCell(const CPos &pos, const CCell &cell) {
-    m_setRun++;
     const auto it = m_sheet.find(pos);
     try {
         if (it != m_sheet.end() && it->first == pos) {
@@ -115,9 +118,12 @@ bool CSpreadsheet::setCell(const CPos &pos, const CCell &cell) {
         } else {
             m_sheet.emplace(pos, cell);
         }
-    } catch (...) {
+    } catch (std::invalid_argument &e) {
+        // print error
+        std::cout << e.what() << std::endl;
         return false;
     }
+    m_setRun++;
     return true;
 }
 
@@ -156,27 +162,23 @@ void CSpreadsheet::copyRect(const CPos &dst, const CPos &src, const int w, const
     std::unordered_map<CPos, CCell, CPosHash> tmp;
     const size_t xOffset = dst.m_x - src.m_x;
     const size_t yOffset = dst.m_y - src.m_y;
-
-    for (size_t x = 0; x < static_cast<size_t>(w); x++) {
-        for (size_t y = 0; y < static_cast<size_t>(h); y++) {
-            auto tmpDst = src.relativeMove(x, y);
-            const auto it = m_sheet.find(tmpDst);
-            if (it == m_sheet.end() || it->first != tmpDst)
-                continue;
-            tmp.emplace(*it);
-        }
+    auto rangeIt = CPosRangeIterator(src, CPos(src.m_x + w - 1, src.m_y + h - 1));
+    for (; !rangeIt.isEnd(); ++rangeIt) {
+        const auto it = m_sheet.find(rangeIt.get());
+        if (it == m_sheet.end() || it->first != rangeIt.get())
+            continue;
+        tmp.emplace(*it);
     }
-    for (size_t x = 0; x < static_cast<size_t>(w); x++) {
-        for (size_t y = 0; y < static_cast<size_t>(h); y++) {
-            CPos ofsDst = src.relativeMove(x + xOffset, y + yOffset);
-            const auto tmpIt = tmp.find(src.relativeMove(x, y));
-            if (tmpIt == tmp.end()) {
-                eraseCell(ofsDst);
-            } else {
-                CCell &cell = tmpIt->second;
-                cell.m_refManager.moveReferences(xOffset, yOffset);
-                setCell(ofsDst, cell);
-            }
+    rangeIt.reset();
+    for (; !rangeIt.isEnd(); ++rangeIt) {
+        CPos ofsDst = rangeIt.get().relativeMove(xOffset, yOffset);
+        const auto tmpIt = tmp.find(rangeIt.get());
+        if (tmpIt == tmp.end()) {
+            eraseCell(ofsDst);
+        } else {
+            CCell &cell = tmpIt->second;
+            cell.m_refManager.moveReferences(xOffset, yOffset);
+            setCell(ofsDst, cell);
         }
     }
 }
