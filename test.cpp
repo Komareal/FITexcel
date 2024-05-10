@@ -501,6 +501,31 @@ void cellTest() {
     res = x.getValue(CPos("c2"));
     assert(valueMatch ( res, CValue ( "ABCefg10.00000020.000000" ) ));
 
+    CSpreadsheet ss, cc;
+    ss.setCell(CPos("A1"), "10");
+    ss.setCell(CPos("A2"), "= 2 * A1");
+
+    assert(valueMatch(ss.getValue(CPos("A1")), CValue(10.)));
+    assert(valueMatch(ss.getValue(CPos("A2")), CValue(20.)));
+
+
+    cc = ss;
+
+
+    assert(valueMatch(ss.getValue(CPos("A1")), CValue(10.)));
+    assert(valueMatch(ss.getValue(CPos("A2")), CValue(20.)));
+    assert(valueMatch(cc.getValue(CPos("A1")), CValue(10.)));
+    assert(valueMatch(cc.getValue(CPos("A2")), CValue(20.)));
+
+    ss.setCell(CPos("A1"), "20");
+    cc.setCell(CPos("A3"), "30");
+    cc.setCell(CPos("A1"), "= 2* A3");
+
+    assert(valueMatch(ss.getValue(CPos("A1")), CValue(20.)));
+    assert(valueMatch(ss.getValue(CPos("A2")), CValue(40.)));
+    assert(valueMatch(cc.getValue(CPos("A3")), CValue(30.)));
+    assert(valueMatch(cc.getValue(CPos("A1")), CValue(60.)));
+
     cout << "cellTest OK" << std::endl;
 }
 

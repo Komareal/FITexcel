@@ -98,7 +98,7 @@ void CBuilder::valRange(const std::string val) {
 }
 
 void CBuilder::funcCall(const std::string fnName, const int paramCount) {
-    if (m_stack.size() < paramCount)
+    if (m_stack.size() < static_cast<size_t>(paramCount))
         throw std::out_of_range("When creating function call not enough values are left");
 
     std::vector<CASTNodePtr> children;
