@@ -15,7 +15,7 @@ public:
 
     void print(std::stringstream &ss, const CRefManager &refManager) const override;
 
-    CSharedVal computeVal(CRefManager &refManager) const override;
+    CSharedVal computeVal(CRefManager & /* unused_param */) const override;
 
     bool isVal() const override {
         return true;

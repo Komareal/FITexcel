@@ -80,13 +80,13 @@ bool CSpreadsheet::save(std::ostream &os) const {
     ss << endl;
     for (const auto &[pos, cell]: m_sheet) {
         stringstream tmp;
-        cell.m_root.m_ptr->print(tmp, cell.m_refManager);
+        cell.m_root->print(tmp, cell.m_refManager);
 
         size_t len = tmp.str().length();
-        if (!cell.m_root.m_ptr->isVal())
+        if (!cell.m_root->isVal())
             len += 2;
         ss << hex << pos.m_x << sep << pos.m_y << sep << len << sep;
-        if (!cell.m_root.m_ptr->isVal())
+        if (!cell.m_root->isVal())
             ss << "= ";
         ss << tmp.str() << endl;
     }
@@ -104,8 +104,6 @@ bool CSpreadsheet::setCell(const CPos &pos, const std::string &contents) {
     try {
         return setCell(pos, CCell(contents));
     } catch (std::invalid_argument &e) {
-        // print error
-        std::cout << e.what() << std::endl;
         return false;
     }
 }
@@ -119,8 +117,6 @@ bool CSpreadsheet::setCell(const CPos &pos, const CCell &cell) {
             m_sheet.emplace(pos, cell);
         }
     } catch (std::invalid_argument &e) {
-        // print error
-        std::cout << e.what() << std::endl;
         return false;
     }
     m_setRun++;

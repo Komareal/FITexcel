@@ -1,6 +1,6 @@
 #include "CASTUnaryNode.h"
 
-CASTUnaryNode::CASTUnaryNode(CASTNodePtr &&child, CSharedVal (*op_fnc)(const CSharedVal &), const EUnaryType type)
+CASTUnaryNode::CASTUnaryNode(std::shared_ptr<AASTNode> &&child, CSharedVal (*op_fnc)(const CSharedVal &), const EUnaryType type)
     : m_child(std::move(child)),
       m_type(type),
       m_opFnc(op_fnc) {
@@ -27,7 +27,7 @@ CASTUnaryNode &CASTUnaryNode::operator=(CASTUnaryNode other) {
 }
 
 bool CASTUnaryNode::hasValChild() const {
-    return m_child.m_ptr->isVal();
+    return m_child->isVal();
 }
 
 void CASTUnaryNode::print(std::stringstream &ss, const CRefManager &refManager) const {
@@ -37,12 +37,12 @@ void CASTUnaryNode::print(std::stringstream &ss, const CRefManager &refManager) 
             ss << "-";
             break;
     }
-    m_child.m_ptr->print(ss, refManager);
+    m_child->print(ss, refManager);
     ss << " ) ";
 }
 
 CSharedVal CASTUnaryNode::computeVal(CRefManager &refManager) const {
-    const CSharedVal res = m_child.m_ptr->computeVal(refManager);
+    const CSharedVal res = m_child->computeVal(refManager);
     if (res == nullptr)
         return nullptr;
     return m_opFnc(res);

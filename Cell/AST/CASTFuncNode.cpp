@@ -5,7 +5,7 @@
 #include "../CRefManager.h"
 
 
-CASTFuncNode::CASTFuncNode(const std::string &type, const std::vector<CASTNodePtr> &children)
+CASTFuncNode::CASTFuncNode(const std::string &type, const std::vector<std::shared_ptr<AASTNode>> &children)
     : m_children(children),
       m_type(EFuncType::SUM) {
     for (const auto &[key, value]: funcTypeStringMap) {
@@ -36,7 +36,7 @@ CASTFuncNode &CASTFuncNode::operator=(CASTFuncNode other) {
 void CASTFuncNode::print(std::stringstream &ss, const CRefManager &refManager) const {
     ss << funcTypeStringMap.find(m_type)->second << "( ";
     for (size_t i = m_children.size(); i > 0; --i) {
-        m_children[i - 1].m_ptr->print(ss, refManager);
+        m_children[i - 1]->print(ss, refManager);
         if (i != 1)
             ss << ", ";
     }
@@ -51,7 +51,7 @@ CSharedVal CASTFuncNode::computeVal(CRefManager &refManager) const {
         return computeIf(refManager);
     }
 
-    const auto optionalIt = m_children[0].m_ptr->getRangeIterator(refManager);
+    const auto optionalIt = m_children[0]->getRangeIterator(refManager);
     if (!optionalIt.has_value()) {
         return nullptr;
     }
@@ -64,7 +64,7 @@ CSharedVal CASTFuncNode::computeVal(CRefManager &refManager) const {
         if (m_children.size() < 2) {
             return nullptr;
         }
-        extraVal = m_children[1].m_ptr->computeVal(refManager);
+        extraVal = m_children[1]->computeVal(refManager);
         if (extraVal == nullptr)
             return nullptr;
     }
@@ -99,14 +99,14 @@ CSharedVal CASTFuncNode::computeIf(CRefManager &refManager) const {
     if (m_children.size() < 3) {
         return nullptr;
     }
-    CSharedVal condition = m_children[2].m_ptr->computeVal(refManager);
+    CSharedVal condition = m_children[2]->computeVal(refManager);
 
     if (condition == nullptr || !holds_alternative<double>(*condition)) {
         return nullptr;
     }
 
     if (std::get<double>(*condition) == 0) {
-        return m_children[0].m_ptr->computeVal(refManager);
+        return m_children[0]->computeVal(refManager);
     }
-    return m_children[1].m_ptr->computeVal(refManager);
+    return m_children[1]->computeVal(refManager);
 }

@@ -54,7 +54,7 @@ CSharedVal CCell::getValue(const size_t run) {
 
     m_valueValidAt = run;
     m_state = CCell::ECellState::OPEN;
-    res = m_root.m_ptr->computeVal(m_refManager);
+    res = m_root->computeVal(m_refManager);
     saveVal(res);
     return res;
 }

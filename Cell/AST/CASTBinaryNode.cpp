@@ -39,11 +39,11 @@ void CASTBinaryNode::print(std::stringstream &ss, const CRefManager &refManager)
         throw std::out_of_range("Binary op does not have enough childern for printing");
 
     ss << "( ";
-    m_childern[1].m_ptr->print(ss, refManager);
+    m_childern[1]->print(ss, refManager);
     ss << " ";
     ss << m_stringMap.find(m_type)->second;
     ss << " ";
-    m_childern[0].m_ptr->print(ss, refManager);
+    m_childern[0]->print(ss, refManager);
     ss << " )";
 }
 
@@ -51,8 +51,8 @@ CSharedVal CASTBinaryNode::computeVal(CRefManager &refManager) const {
     if (m_childernSize != 2)
         throw std::out_of_range("Binary op does not have enough childern for printing");
 
-    const CSharedVal first = m_childern[1].m_ptr->computeVal(refManager),
-            second = m_childern[0].m_ptr->computeVal(refManager);
+    const CSharedVal first = m_childern[1]->computeVal(refManager),
+            second = m_childern[0]->computeVal(refManager);
 
     if (first == nullptr || second == nullptr)
         return nullptr;
@@ -60,7 +60,7 @@ CSharedVal CASTBinaryNode::computeVal(CRefManager &refManager) const {
     return m_opFnc(first, second);
 }
 
-void CASTBinaryNode::addChild(const CASTNodePtr &child) {
+void CASTBinaryNode::addChild(const std::shared_ptr<AASTNode> &child) {
     if (m_childernSize == 2)
         return;
     m_childern[m_childernSize++] = child;
@@ -69,5 +69,5 @@ void CASTBinaryNode::addChild(const CASTNodePtr &child) {
 bool CASTBinaryNode::hasValChildern() const {
     if (m_childernSize != 2)
         throw std::out_of_range("Binary op does not have enough childern for checking them");
-    return m_childern[0].m_ptr->isVal() && m_childern[1].m_ptr->isVal();
+    return m_childern[0]->isVal() && m_childern[1]->isVal();
 }

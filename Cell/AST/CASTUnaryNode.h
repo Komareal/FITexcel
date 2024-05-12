@@ -1,7 +1,7 @@
 #ifndef CASTUNARYNODE_H
 #define CASTUNARYNODE_H
 
-#include "CASTNodePtr.h"
+#include "AASTNode.h"
 #include "../../header.h"
 
 class CASTUnaryNode final : public AASTNode {
@@ -10,7 +10,7 @@ public:
         NEG
     };
 
-    CASTUnaryNode(CASTNodePtr &&child, CSharedVal (*op_fnc)(const CSharedVal &), EUnaryType type);
+    CASTUnaryNode(std::shared_ptr<AASTNode> &&child, CSharedVal (*op_fnc)(const CSharedVal &), EUnaryType type);
 
     CASTUnaryNode(const CASTUnaryNode &other);
 
@@ -25,7 +25,7 @@ public:
     CSharedVal computeVal(CRefManager &refManager) const override;
 
 private:
-    CASTNodePtr m_child;
+    std::shared_ptr<AASTNode> m_child;
 
     EUnaryType m_type;
 

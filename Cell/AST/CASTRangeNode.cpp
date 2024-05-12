@@ -29,7 +29,7 @@ void CASTRangeNode::print(std::stringstream &ss, const CRefManager &refManager) 
     refManager.print(ss, m_rightReference);
 }
 
-CSharedVal CASTRangeNode::computeVal(CRefManager &refManager) const {
+CSharedVal CASTRangeNode::computeVal(CRefManager & /* unused_param */) const {
     return nullptr;
 }
 

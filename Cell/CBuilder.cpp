@@ -13,7 +13,7 @@ CBuilder::CBuilder(CRefManager &m_ref_manager)
     : m_refManager(m_ref_manager) {
 }
 
-CASTNodePtr CBuilder::getRoot() {
+std::shared_ptr<AASTNode> CBuilder::getRoot() {
     if (m_stack.size() > 1)
         throw std::length_error("More nodes in stack");
     return std::move(m_stack.top());
@@ -101,7 +101,7 @@ void CBuilder::funcCall(const std::string fnName, const int paramCount) {
     if (m_stack.size() < static_cast<size_t>(paramCount))
         throw std::out_of_range("When creating function call not enough values are left");
 
-    std::vector<CASTNodePtr> children;
+    std::vector<std::shared_ptr<AASTNode>> children;
     for (int i = 0; i < paramCount; i++) {
         children.push_back(m_stack.top());
         m_stack.pop();

@@ -14,7 +14,7 @@ CASTValNode &CASTValNode::operator=(CASTValNode other) {
     return *this;
 }
 
-void CASTValNode::print(std::stringstream &ss, const CRefManager &refManager) const {
+void CASTValNode::print(std::stringstream &ss, const CRefManager & /* unused_param */) const {
     using namespace std;
     if (holds_alternative<double>(*m_val))
         ss << get<double>(*m_val);
@@ -22,6 +22,6 @@ void CASTValNode::print(std::stringstream &ss, const CRefManager &refManager) co
         ss << get<string>(*m_val);
 }
 
-CSharedVal CASTValNode::computeVal(CRefManager &refManager) const {
+CSharedVal CASTValNode::computeVal(CRefManager & /* unused_param */) const {
     return m_val;
 }
