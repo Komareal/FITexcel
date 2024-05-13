@@ -129,6 +129,7 @@ private:
 
     /**
      * Takes two values from the stack and makes a binary operation node and pushes it back to the stack
+     *  If the both next nodes in the stack are value nodes, it precomputes the value instead of making Binary operation the node
      * @param op_fnc  ptr to the function that will be used for the operation
      * @param type Enum of the operation type
      */
@@ -136,6 +137,7 @@ private:
 
     /**
      * Takes one value from the stack and makes a unary operation node and pushes it back to the stack
+     *  If the next node in the stack is a value node, it precomputes the value instead of making Unary operation the node
      * @param op_fnc ptr to the function that will be used for the operation
      * @param type  Enum of the operation type
      */

@@ -45,7 +45,7 @@ CCell &CCell::operator=(CCell other) {
 CSharedVal CCell::getValue(const size_t run) {
     CSharedVal res;
     if (m_valueValidAt == run) {
-        if (m_state == CCell::ECellState::OPEN) {
+        if (m_state == ECellState::OPEN) {
             saveVal(res);
             return res;
         }
@@ -53,7 +53,7 @@ CSharedVal CCell::getValue(const size_t run) {
     }
 
     m_valueValidAt = run;
-    m_state = CCell::ECellState::OPEN;
+    m_state = ECellState::OPEN;
     res = m_root->computeVal(m_refManager);
     saveVal(res);
     return res;

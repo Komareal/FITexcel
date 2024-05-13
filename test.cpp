@@ -1,4 +1,5 @@
 #include "test.h"
+#ifndef __PROGTEST__
 using namespace std;
 
 bool valueMatch(const CValue &r,
@@ -17,12 +18,6 @@ bool valueMatch(const CValue &r,
     return fabs(std::get<double>(r) - std::get<double>(s)) <= 1e8 * DBL_EPSILON * fabs(std::get<double>(r));
 }
 
-void runTests() {
-    posTest();
-    cellTest();
-    basicTests();
-    funcTest();
-}
 
 void cellTest() {
     CSpreadsheet s;
@@ -354,7 +349,7 @@ void funcTest() {
     assert(s.setCell(CPos("a3"), "=-100"));
     assert(s.setCell(CPos("b2"), "=0"));
     assert(s.setCell(CPos("b3"), "=2"));
-    // setCellRange({"t1", "t2", "t3", "t4", "t5"}, {"=sum(A1:B3)", "=min(A1:B3)", "= max(A1:B3)", "= count(A1:B3)", "= countval(0, A1:B3)"}, s);
+
     assert(s.setCell(CPos("t1"), "=sum(A1:B3)"));
     assert(s.setCell(CPos("t2"), "=min(A1:B3)"));
     assert(s.setCell(CPos("t3"), "=max(A1:B3)"));
@@ -379,9 +374,9 @@ void funcTest() {
     assert(valueMatch(s.getValue(CPos("t6")), CValue(100.0)));
     assert(valueMatch(s.getValue(CPos("t7")), CValue(-2.0)));
 
+    cout << "funcTest OK" << std::endl;
 }
 
-#ifdef BASIC_TEST
 void basicTests() {
     CSpreadsheet x0, x1;
     std::ostringstream oss;
@@ -515,6 +510,6 @@ void basicTests() {
     iss.clear();
     iss.str(data);
     assert(! x1 . load ( iss ));
-    cout << "Basic prog tests OK" << endl;
+    cout << "basicTests OK" << endl;
 }
 #endif

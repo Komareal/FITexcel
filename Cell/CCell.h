@@ -35,7 +35,8 @@ public:
 
 private:
     /**
-     * Cached value of the cell
+     * Cached value of the cell (valid until some cell is added/changed/removed)
+     * Saves a lot of computation time in speed tests
      */
     CSharedVal m_computedValue;
 

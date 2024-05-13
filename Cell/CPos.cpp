@@ -108,7 +108,7 @@ void CPos::print(std::ostream &os) const {
         size_t tmpX = m_x;
         std::string tmpstr;
         while (tmpX > 0) {
-            tmpstr = static_cast<char>('A' + (tmpX % 26) - 1) + tmpstr;
+            tmpstr = static_cast<char>('A' + tmpX % 26 - 1) + tmpstr;
             tmpX /= 26;
         }
         os << tmpstr;

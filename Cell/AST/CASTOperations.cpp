@@ -102,14 +102,17 @@ CSharedVal CASTOperations::lt(const CSharedVal &first, const CSharedVal &second)
 }
 
 CSharedVal CASTOperations::gt(const CSharedVal &first, const CSharedVal &second) {
+    // gt(a, b) = lt(b, a)
     return lt(second, first);
 }
 
 CSharedVal CASTOperations::ge(const CSharedVal &first, const CSharedVal &second) {
+    // ge(a, b) = !lt(a, b)
     return negateBool(lt(first, second));
 }
 
 CSharedVal CASTOperations::le(const CSharedVal &first, const CSharedVal &second) {
+    // le(a, b) = ge(b, a)
     return ge(second, first);
 }
 
@@ -182,7 +185,7 @@ double CASTOperations::convertBoolToDouble(const bool x) {
 CSharedVal CASTOperations::negateBool(const CSharedVal &val) {
     if (val == nullptr)
         return nullptr;
-    const CSharedVal res = std::make_shared<CValue>(*val);
+    const auto res = std::make_shared<CValue>(*val);
     *res = convertBoolToDouble(std::get<double>(*res) == 0);
     return res;
 }

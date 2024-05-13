@@ -113,7 +113,6 @@ public:
 
     /**
      *  is used to count defined values in range loop
-
      * @param carry  carry of previous results
      * @param val  if value is not nullptr, carry is incremented
      */

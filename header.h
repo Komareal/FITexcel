@@ -37,7 +37,6 @@
 
 using CValue = std::variant<std::monostate, double, std::string>;
 
-#define BASIC_TEST
 #endif /* __PROGTEST__ */
 
 using CSharedVal = std::shared_ptr<CValue>;

@@ -25,8 +25,9 @@ public:
 
     /**
      *  Recursively compute the value of the node
+     *  If nullptr is returned, something went wrong (e.g. cycle) so it bubbles up the tree
      * @param refManager reference manager to resolve references
-     * @return shared pointer to the computed value
+     * @return shared pointer to the computed value (point of doing this is to avoid big strings copying)
      */
     virtual CSharedVal computeVal(CRefManager &refManager) const = 0;
 

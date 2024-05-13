@@ -35,6 +35,7 @@ bool CSpreadsheet::load(std::istream &is) {
 
     nexSheet.m_setRun = 1;
 
+    // get control hash
     whole.resize(17);
     is.read(&whole[0], 16);
 
@@ -45,8 +46,10 @@ bool CSpreadsheet::load(std::istream &is) {
     constexpr std::hash<std::string> hasher;
     tmpis = stringstream();
     tmpis << is.rdbuf();
+    // get the whole string without the hash
     whole = tmpis.str();
 
+    // check the hash
     if (hasher(whole) != controlHash)
         return false;
 
@@ -75,10 +78,10 @@ bool CSpreadsheet::load(std::istream &is) {
 
 bool CSpreadsheet::save(std::ostream &os) const {
     using namespace std;
-    constexpr char sep = ' ';
     stringstream ss;
     ss << endl;
     for (const auto &[pos, cell]: m_sheet) {
+        constexpr char sep = ' ';
         stringstream tmp;
         cell.m_root->print(tmp, cell.m_refManager);
 
@@ -103,7 +106,7 @@ bool CSpreadsheet::save(std::ostream &os) const {
 bool CSpreadsheet::setCell(const CPos &pos, const std::string &contents) {
     try {
         return setCell(pos, CCell(contents));
-    } catch (std::invalid_argument &e) {
+    } catch (...) {
         return false;
     }
 }
@@ -116,7 +119,7 @@ bool CSpreadsheet::setCell(const CPos &pos, const CCell &cell) {
         } else {
             m_sheet.emplace(pos, cell);
         }
-    } catch (std::invalid_argument &e) {
+    } catch (...) {
         return false;
     }
     m_setRun++;

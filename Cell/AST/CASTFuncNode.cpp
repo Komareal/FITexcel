@@ -99,7 +99,7 @@ CSharedVal CASTFuncNode::computeIf(CRefManager &refManager) const {
     if (m_children.size() < 3) {
         return nullptr;
     }
-    CSharedVal condition = m_children[2]->computeVal(refManager);
+    const CSharedVal condition = m_children[2]->computeVal(refManager);
 
     if (condition == nullptr || !holds_alternative<double>(*condition)) {
         return nullptr;

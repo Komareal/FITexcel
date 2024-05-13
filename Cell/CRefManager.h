@@ -78,6 +78,7 @@ private:
     /**
      *  Array of pairs of positions and pointers to the cells for optimization
      *  the exact pointers are used when no cell was erased since when the cache was valid
+     *  Saves like almost no time, since converting to unordered_map. But when tested it without it and with it small speedup was still visible
      */
     CRefCacheArr m_references;
 

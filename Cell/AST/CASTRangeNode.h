@@ -48,7 +48,6 @@ private:
      *  Index of the left reference in refManager
      */
     size_t m_leftReference;
-
     /**
      *  Index of the right reference in refManager
      */

@@ -30,8 +30,9 @@ public:
 
     /**
      *  Returns value of the node that is referenced
+     *  Also checks for cycles
      * @param refManager
-     * @return  value of the  node that is referenced
+     * @return  value of the  node that is referenced / nullptr if cycle detected
      */
     CSharedVal computeVal(CRefManager &refManager) const override;
 
