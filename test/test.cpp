@@ -2,7 +2,7 @@
 #include "../src/header.h"
 #include "../src/CSpreadsheet.h"
 #include "../src/Cell/CPos.h"
-#include "../src/Cell/expression.h"
+#include "../lib/expression.h"
 
 #ifndef __PROGTEST__
 using namespace std;

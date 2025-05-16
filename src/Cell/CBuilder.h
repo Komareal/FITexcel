@@ -6,7 +6,7 @@
 #include "AST/CASTBinaryNode.h"
 #include "AST/CASTUnaryNode.h"
 #ifndef __PROGTEST__
-#include "expression.h"
+#include "../../lib/expression.h"
 #endif
 
 class CBuilder final : public CExprBuilder {
