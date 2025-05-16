@@ -1,6 +1,7 @@
-#include "header.h"
+#include "src/header.h"
+
 #ifndef __PROGTEST__
-#include "test.h"
+#include "test/test.h"
 
 int main() {
     posTest();

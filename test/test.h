@@ -1,10 +1,7 @@
 #ifndef __PROGTEST__
 #ifndef TEST_H
 #define TEST_H
-#include "header.h"
-#include "CSpreadsheet.h"
-#include "Cell/CPos.h"
-#include "Cell/expression.h"
+
 
 /**
  * Tests the functionality of CPos
